@@ -1,24 +1,25 @@
 Summary:	API documentation generation tool for GTK+ and GNOME
+Summary(es): El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
+Summary(pt_BR): O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	0.4b1
-Release:	3
+Version:	0.7
+Release:	2
 License:	LGPL
 Group:		Development/Tools
 Group(de):	Entwicklung/Werkzeuge
 Group(fr):	Development/Outils
 Group(pl):	Programowanie/Narzêdzia
 Source0:	ftp://ftp.gtk.org/pub/gtk/v1.1/docs/rdp/%{name}-%{version}.tar.gz
-Patch0:		%{name}-pubid.patch
 URL:		http://www.gtk.org/rdp/
-BuildArch:	noarch
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-BuildRequires:	docbook-utils
-BuildRequires:	openjade
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	docbook-utils
+BuildRequires:	openjade
 Requires:	docbook-utils
 Requires:	openjade
+BuildArch:	noarch
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 gtk-doc is a tool for generating API reference documentation. It is
@@ -30,13 +31,13 @@ do generowania dokumentacji GLib, GTK+ i GNOME.
 
 %prep
 %setup -q
-%patch -p1 -b .pubid
-# Move this doc file to avoid name collisions
 mv -f doc/README doc/README.docs
 
 %build
+rm -f missing
 aclocal
 autoconf
+automake -a -c
 %configure \
 	--enable-public-id
 %{__make}
@@ -46,13 +47,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf AUTHORS README doc/* examples/gnome*/* examples/[MRc]*
+gzip -9nf AUTHORS README doc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS.gz README.gz doc/* examples
+%doc AUTHORS.gz README.gz doc/*
 %attr(755,root,root) %{_bindir}/*
 %{_datadir}/gtk-doc
