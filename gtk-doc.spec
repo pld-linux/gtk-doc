@@ -3,12 +3,12 @@ Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.1
-Release:	1.1
+Version:	1.2
+Release:	1
 License:	LGPL
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/%{name}/1.1/%{name}-%{version}.tar.bz2
-# Source0-md5: add8e01da624025b2835f5f85a864e7f
+Source0:	http://ftp.gnome.org/pub/gnome/sources/%{name}/1.2/%{name}-%{version}.tar.bz2
+# Source0-md5:	7776ad690ca6baaaf071c83b51d2a234
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -17,6 +17,7 @@ BuildRequires:	openjade
 BuildRequires:	libxslt-progs
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
+BuildRequires:	perl-base >= 5.6.0
 Requires:	docbook-dtd412-xml >= 1.0-10
 Requires:	docbook-style-dsssl >= 1.77
 Requires:	docbook-style-xsl >= 1.55.0-3
@@ -58,15 +59,15 @@ rm -f missing
 %{__aclocal}
 %{__autoconf}
 %{__automake}
-%configure \
-	--enable-public-id
+%configure
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,6 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/gtk-doc
 %{_pkgconfigdir}/%{name}.pc
 %{_aclocaldir}/*
+%{_datadir}/sgml/%{name}
 
 %files common
 %defattr(644,root,root,755)
