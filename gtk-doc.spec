@@ -1,7 +1,7 @@
 Summary:	API documentation generation tool for GTK+ and GNOME
 Name:		gtk-doc
 Version:	0.4b1
-Release:	1
+Release:	2
 License:	LGPL
 Group:		Development/Tools
 Group(de):	Entwicklung/Werkzeuge
