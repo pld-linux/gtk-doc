@@ -33,8 +33,8 @@ mv -f doc/README doc/README.docs
 %build
 rm -f missing
 aclocal
-autoconf
-automake -a -c -f
+%{__autoconf}
+%{__automake}
 %configure \
 	--enable-public-id
 %{__make}
