@@ -15,9 +15,10 @@ BuildRequires:	automake
 BuildRequires:	docbook-utils
 BuildRequires:	openjade
 BuildRequires:	libxslt-progs
+Requires:	docbook-dtd412-xml >= 1.0-10
+Requires:	docbook-style-xsl >= 1.55.0-3
 Requires:	docbook-utils >= 0.6.10
 Requires:	openjade
-Requires:	docbook-style-xsl >= 1.55.0-3
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
