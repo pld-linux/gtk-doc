@@ -1,39 +1,67 @@
 Summary:	API documentation generation tool for GTK+ and GNOME
+Summary(es):	El generador de documentación del GTK
+Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
+Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	0.4b1
+Version:	0.10
 Release:	1
 License:	LGPL
 Group:		Development/Tools
-Group(de):	Entwicklung/Werkzeuge
-Group(fr):	Development/Outils
-Group(pl):	Programowanie/Narzêdzia
-Source0:	%{name}-%{version}.tar.gz
-Patch0:		%{name}-pubid.patch
+Source0:	http://ftp.gnome.org/pub/gnome/sources/%{name}/0.10/%{name}-%{version}.tar.bz2
+URL:		http://www.gtk.org/rdp/
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	docbook-utils
+BuildRequires:	openjade
+BuildRequires:	libxslt-progs
+Requires:	docbook-dtd412-xml >= 1.0-10
+Requires:	docbook-style-dsssl >= 1.77
+Requires:	docbook-style-xsl >= 1.55.0-3
+Requires:	docbook-utils >= 0.6.10
+Requires:	gnome-doc-tools >= 1.0-4
+Requires:	libxslt-progs
+Requires:	openjade
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-URL:		http://www.gtk.org/rdp
-BuildPrereq:	docbook-utils
-BuildPrereq:	openjade
-Requires:	docbook-utils
-Requires:	openjade
 
 %description
 gtk-doc is a tool for generating API reference documentation. It is
 used for generating the documentation for GTK+, GLib and GNOME.
 
-%prep
+%description -l pl
+gtk-doc jest narzêdziem do generowania dokumentacji API. Jest u¿ywany
+do generowania dokumentacji GLib, GTK+ i GNOME.
 
+%package common
+Summary:	Common directories for documetation generated using gtk-doc
+Summary(pl):	Katalogi na dokumentacjê wygenerowan± za pomoc± gtk-doc
+# ???
+Group:		Documentation
+
+%description common
+Common directories for API documentation for various packages,
+generated using gtk-doc.
+
+%description common -l pl
+Katalogi na dokumetacjê API do ró¿nych pakietów, wygenerowan± za
+pomoc± gtk-doc.
+
+%prep
 %setup -q
-%patch -p1 -b .pubid
-# Move this doc file to avoid name collisions
-mv doc/README doc/README.docs
+mv -f doc/README doc/README.docs
 
 %build
-%configure --enable-public-id
+rm -f missing
+%{__aclocal}
+%{__autoconf}
+%{__automake}
+%configure \
+	--enable-public-id
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
@@ -42,8 +70,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-
-%doc AUTHORS README doc/* examples
-
+%doc AUTHORS README doc/*
 %attr(755,root,root) %{_bindir}/*
-%{_datadir}/gtk-doc/
+%{_datadir}/gtk-doc
+
+%files common
+%defattr(644,root,root,755)
+%dir %{_defaultdocdir}/gtk-doc
+%dir %{_defaultdocdir}/gtk-doc/html
