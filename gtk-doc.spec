@@ -4,10 +4,11 @@ Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	0.9
-Release:	3
+Release:	4
 License:	LGPL
 Group:		Development/Tools
 Source0:	ftp://ftp.gtk.org/pub/gtk/v1.1/docs/rdp/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-xml.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -42,6 +43,7 @@ pomoc± gtk-doc.
 
 %prep
 %setup -q
+%patch0 -p1
 mv -f doc/README doc/README.docs
 
 %build
