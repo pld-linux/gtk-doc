@@ -44,13 +44,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf AUTHORS README doc/*
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS.gz README.gz doc/*
+%doc AUTHORS README doc/*
 %attr(755,root,root) %{_bindir}/*
 %{_datadir}/gtk-doc
