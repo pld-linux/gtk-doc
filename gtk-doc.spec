@@ -7,7 +7,7 @@ Version:	1.2
 Release:	2
 License:	LGPL
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/%{name}/1.2/%{name}-%{version}.tar.bz2
+Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.2/%{name}-%{version}.tar.bz2
 # Source0-md5:	7776ad690ca6baaaf071c83b51d2a234
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
@@ -54,7 +54,6 @@ pomoc± gtk-doc.
 mv -f doc/README doc/README.docs
 
 %build
-rm -f missing
 %{__aclocal}
 %{__autoconf}
 %{__automake}
