@@ -1,4 +1,5 @@
 Summary:	API documentation generation tool for GTK+ and GNOME
+Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Name:		gtk-doc
 Version:	0.4b1
 Release:	2
@@ -7,13 +8,15 @@ Group:		Development/Tools
 Group(de):	Entwicklung/Werkzeuge
 Group(fr):	Development/Outils
 Group(pl):	Programowanie/Narzêdzia
-Source0:	%{name}-%{version}.tar.gz
+Source0:	ftp://ftp.gtk.org/pub/gtk/v1.1/docs/rdp/%{name}-%{version}.tar.gz
 Patch0:		%{name}-pubid.patch
+URL:		http://www.gtk.org/rdp/
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-URL:		http://www.gtk.org/rdp
-BuildPrereq:	docbook-utils
-BuildPrereq:	openjade
+BuildRequires:	docbook-utils
+BuildRequires:	openjade
+BuildRequires:	autoconf
+BuildRequires:	automake
 Requires:	docbook-utils
 Requires:	openjade
 
@@ -21,11 +24,15 @@ Requires:	openjade
 gtk-doc is a tool for generating API reference documentation. It is
 used for generating the documentation for GTK+, GLib and GNOME.
 
+%description -l pl
+gtk-doc jest narzêdziem do generowania dokumentacji API. Jest u¿ywany
+do generowania dokumentacji GLib, GTK+ i GNOME.
+
 %prep
 %setup -q
 %patch -p1 -b .pubid
 # Move this doc file to avoid name collisions
-mv doc/README doc/README.docs
+mv -f doc/README doc/README.docs
 
 %build
 aclocal
