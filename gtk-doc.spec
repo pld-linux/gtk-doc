@@ -34,7 +34,7 @@ mv -f doc/README doc/README.docs
 rm -f missing
 aclocal
 autoconf
-automake -a -c
+automake -a -c -f
 %configure \
 	--enable-public-id
 %{__make}
