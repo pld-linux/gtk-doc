@@ -28,6 +28,8 @@ used for generating the documentation for GTK+, GLib and GNOME.
 mv doc/README doc/README.docs
 
 %build
+aclocal
+autoconf
 %configure \
 	--enable-public-id
 %{__make}
