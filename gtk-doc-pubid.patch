@@ -1,0 +1,376 @@
+--- gtk-doc-0.4b1/gtk-doc.dsl.in.pubid	Wed Dec 15 22:43:33 1999
++++ gtk-doc-0.4b1/gtk-doc.dsl.in	Tue Jan 16 19:24:28 2001
+@@ -1,5 +1,6 @@
+ <!DOCTYPE style-sheet PUBLIC "-//James Clark//DTD DSSSL Style Sheet//EN" [
+-<!ENTITY dbstyle SYSTEM "@DSSSL_DIR@/html/docbook.dsl" CDATA DSSSL>
++<!ENTITY dbstyle
++ PUBLIC "-//Norman Walsh//DOCUMENT DocBook HTML Stylesheet//EN" CDATA DSSSL>
+ ]>
+ 
+ <style-sheet>
+--- gtk-doc-0.4b1/configure.in.pubid	Mon Oct 23 15:50:18 2000
++++ gtk-doc-0.4b1/configure.in	Tue Jan 16 19:24:28 2001
+@@ -4,40 +4,13 @@
+ 
+ AM_INIT_AUTOMAKE(gtk-doc, 0.4)
+ 
+-AC_ARG_WITH(dsssl-dir, [  --with-dsssl-dir=PATH path to DocBook style sheets ])
+-
+ AC_ISC_POSIX
+ AC_PROG_CC
+ 
+-if test "x$with_dsssl_dir" = "x" ; then
+-  dirs="/usr/lib/sgml/stylesheets/nwalsh-modular /usr/lib/sgml/stylesheet/dsssl/docbook/nwalsh /usr/lib/dsssl/stylesheets/docbook /usr/share/sgml/docbkdsl"
+-else
+-  dirs=$with_dsssl_dir
+-fi
+- 
+ AC_PATH_PROG(PERL, perl)
+ if test -z "$PERL"; then
+    AC_MSG_ERROR([perl not found])
+ fi
+-
+-AC_MSG_CHECKING([for DocBook stylesheets])
+-
+-DSSSL_DIR=""
+-for i in $dirs ; do
+-  if test -f $i/html/docbook.dsl ; then
+-    DSSSL_DIR=$i
+-  fi
+-done
+-
+-if test "x$DSSSL_DIR" = x ; then
+-  AC_MSG_ERROR([
+-*** Cannot find DocBook stylesheets in "$dirs". 
+-*** Perhaps you need to specify the --with-dsssl-dir=PATH option?])
+-fi
+-
+-AC_SUBST(DSSSL_DIR)
+-
+-AC_MSG_RESULT(found)
+ 
+ dnl Only use -Wall if we have gcc
+ if test "x$GCC" = "xyes"; then
+--- gtk-doc-0.4b1/configure.pubid	Tue Jan 16 19:25:06 2001
++++ gtk-doc-0.4b1/configure	Tue Jan 16 19:25:09 2001
+@@ -11,8 +11,6 @@
+ ac_help=
+ ac_default_prefix=/usr/local
+ # Any additions from configure.in:
+-ac_help="$ac_help
+-  --with-dsssl-dir=PATH path to DocBook style sheets "
+ 
+ # Initialize some variables set by options.
+ # The variables have the same names as the options, with
+@@ -555,7 +553,7 @@
+ # SVR4 /usr/ucb/install, which tries to use the nonexistent group "staff"
+ # ./install, which can be erroneously created by make from ./install.sh.
+ echo $ac_n "checking for a BSD compatible install""... $ac_c" 1>&6
+-echo "configure:559: checking for a BSD compatible install" >&5
++echo "configure:557: checking for a BSD compatible install" >&5
+ if test -z "$INSTALL"; then
+ if eval "test \"`echo '$''{'ac_cv_path_install'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+@@ -608,7 +606,7 @@
+ test -z "$INSTALL_DATA" && INSTALL_DATA='${INSTALL} -m 644'
+ 
+ echo $ac_n "checking whether build environment is sane""... $ac_c" 1>&6
+-echo "configure:612: checking whether build environment is sane" >&5
++echo "configure:610: checking whether build environment is sane" >&5
+ # Just in case
+ sleep 1
+ echo timestamp > conftestfile
+@@ -665,7 +663,7 @@
+ test "$program_transform_name" = "" && program_transform_name="s,x,x,"
+ 
+ echo $ac_n "checking whether ${MAKE-make} sets \${MAKE}""... $ac_c" 1>&6
+-echo "configure:669: checking whether ${MAKE-make} sets \${MAKE}" >&5
++echo "configure:667: checking whether ${MAKE-make} sets \${MAKE}" >&5
+ set dummy ${MAKE-make}; ac_make=`echo "$2" | sed 'y%./+-%__p_%'`
+ if eval "test \"`echo '$''{'ac_cv_prog_make_${ac_make}_set'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+@@ -711,7 +709,7 @@
+ 
+ missing_dir=`cd $ac_aux_dir && pwd`
+ echo $ac_n "checking for working aclocal""... $ac_c" 1>&6
+-echo "configure:715: checking for working aclocal" >&5
++echo "configure:713: checking for working aclocal" >&5
+ # Run test in a subshell; some versions of sh will print an error if
+ # an executable is not found, even if stderr is redirected.
+ # Redirect stdin to placate older versions of autoconf.  Sigh.
+@@ -724,7 +722,7 @@
+ fi
+ 
+ echo $ac_n "checking for working autoconf""... $ac_c" 1>&6
+-echo "configure:728: checking for working autoconf" >&5
++echo "configure:726: checking for working autoconf" >&5
+ # Run test in a subshell; some versions of sh will print an error if
+ # an executable is not found, even if stderr is redirected.
+ # Redirect stdin to placate older versions of autoconf.  Sigh.
+@@ -737,7 +735,7 @@
+ fi
+ 
+ echo $ac_n "checking for working automake""... $ac_c" 1>&6
+-echo "configure:741: checking for working automake" >&5
++echo "configure:739: checking for working automake" >&5
+ # Run test in a subshell; some versions of sh will print an error if
+ # an executable is not found, even if stderr is redirected.
+ # Redirect stdin to placate older versions of autoconf.  Sigh.
+@@ -750,7 +748,7 @@
+ fi
+ 
+ echo $ac_n "checking for working autoheader""... $ac_c" 1>&6
+-echo "configure:754: checking for working autoheader" >&5
++echo "configure:752: checking for working autoheader" >&5
+ # Run test in a subshell; some versions of sh will print an error if
+ # an executable is not found, even if stderr is redirected.
+ # Redirect stdin to placate older versions of autoconf.  Sigh.
+@@ -763,7 +761,7 @@
+ fi
+ 
+ echo $ac_n "checking for working makeinfo""... $ac_c" 1>&6
+-echo "configure:767: checking for working makeinfo" >&5
++echo "configure:765: checking for working makeinfo" >&5
+ # Run test in a subshell; some versions of sh will print an error if
+ # an executable is not found, even if stderr is redirected.
+ # Redirect stdin to placate older versions of autoconf.  Sigh.
+@@ -777,17 +775,10 @@
+ 
+ 
+ 
+-# Check whether --with-dsssl-dir or --without-dsssl-dir was given.
+-if test "${with_dsssl_dir+set}" = set; then
+-  withval="$with_dsssl_dir"
+-  :
+-fi
+-
+-
+ # Extract the first word of "gcc", so it can be a program name with args.
+ set dummy gcc; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:791: checking for $ac_word" >&5
++echo "configure:782: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -817,7 +808,7 @@
+   # Extract the first word of "cc", so it can be a program name with args.
+ set dummy cc; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:821: checking for $ac_word" >&5
++echo "configure:812: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -868,7 +859,7 @@
+       # Extract the first word of "cl", so it can be a program name with args.
+ set dummy cl; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:872: checking for $ac_word" >&5
++echo "configure:863: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -900,7 +891,7 @@
+ fi
+ 
+ echo $ac_n "checking whether the C compiler ($CC $CFLAGS $LDFLAGS) works""... $ac_c" 1>&6
+-echo "configure:904: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) works" >&5
++echo "configure:895: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) works" >&5
+ 
+ ac_ext=c
+ # CFLAGS is not in ac_cpp because -g, -O, etc. are not valid cpp options.
+@@ -911,12 +902,12 @@
+ 
+ cat > conftest.$ac_ext << EOF
+ 
+-#line 915 "configure"
++#line 906 "configure"
+ #include "confdefs.h"
+ 
+ main(){return(0);}
+ EOF
+-if { (eval echo configure:920: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++if { (eval echo configure:911: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+   ac_cv_prog_cc_works=yes
+   # If we can't run a trivial program, we are probably using a cross compiler.
+   if (./conftest; exit) 2>/dev/null; then
+@@ -942,12 +933,12 @@
+   { echo "configure: error: installation or configuration problem: C compiler cannot create executables." 1>&2; exit 1; }
+ fi
+ echo $ac_n "checking whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler""... $ac_c" 1>&6
+-echo "configure:946: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler" >&5
++echo "configure:937: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler" >&5
+ echo "$ac_t""$ac_cv_prog_cc_cross" 1>&6
+ cross_compiling=$ac_cv_prog_cc_cross
+ 
+ echo $ac_n "checking whether we are using GNU C""... $ac_c" 1>&6
+-echo "configure:951: checking whether we are using GNU C" >&5
++echo "configure:942: checking whether we are using GNU C" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_gcc'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -956,7 +947,7 @@
+   yes;
+ #endif
+ EOF
+-if { ac_try='${CC-cc} -E conftest.c'; { (eval echo configure:960: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; } | egrep yes >/dev/null 2>&1; then
++if { ac_try='${CC-cc} -E conftest.c'; { (eval echo configure:951: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; } | egrep yes >/dev/null 2>&1; then
+   ac_cv_prog_gcc=yes
+ else
+   ac_cv_prog_gcc=no
+@@ -975,7 +966,7 @@
+ ac_save_CFLAGS="$CFLAGS"
+ CFLAGS=
+ echo $ac_n "checking whether ${CC-cc} accepts -g""... $ac_c" 1>&6
+-echo "configure:979: checking whether ${CC-cc} accepts -g" >&5
++echo "configure:970: checking whether ${CC-cc} accepts -g" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_cc_g'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1007,7 +998,7 @@
+ fi
+ 
+ echo $ac_n "checking for POSIXized ISC""... $ac_c" 1>&6
+-echo "configure:1011: checking for POSIXized ISC" >&5
++echo "configure:1002: checking for POSIXized ISC" >&5
+ if test -d /etc/conf/kconfig.d &&
+   grep _POSIX_VERSION /usr/include/sys/unistd.h >/dev/null 2>&1
+ then
+@@ -1030,7 +1021,7 @@
+ # Extract the first word of "gcc", so it can be a program name with args.
+ set dummy gcc; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:1034: checking for $ac_word" >&5
++echo "configure:1025: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1060,7 +1051,7 @@
+   # Extract the first word of "cc", so it can be a program name with args.
+ set dummy cc; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:1064: checking for $ac_word" >&5
++echo "configure:1055: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1111,7 +1102,7 @@
+       # Extract the first word of "cl", so it can be a program name with args.
+ set dummy cl; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:1115: checking for $ac_word" >&5
++echo "configure:1106: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_CC'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1143,7 +1134,7 @@
+ fi
+ 
+ echo $ac_n "checking whether the C compiler ($CC $CFLAGS $LDFLAGS) works""... $ac_c" 1>&6
+-echo "configure:1147: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) works" >&5
++echo "configure:1138: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) works" >&5
+ 
+ ac_ext=c
+ # CFLAGS is not in ac_cpp because -g, -O, etc. are not valid cpp options.
+@@ -1154,12 +1145,12 @@
+ 
+ cat > conftest.$ac_ext << EOF
+ 
+-#line 1158 "configure"
++#line 1149 "configure"
+ #include "confdefs.h"
+ 
+ main(){return(0);}
+ EOF
+-if { (eval echo configure:1163: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
++if { (eval echo configure:1154: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext}; then
+   ac_cv_prog_cc_works=yes
+   # If we can't run a trivial program, we are probably using a cross compiler.
+   if (./conftest; exit) 2>/dev/null; then
+@@ -1185,12 +1176,12 @@
+   { echo "configure: error: installation or configuration problem: C compiler cannot create executables." 1>&2; exit 1; }
+ fi
+ echo $ac_n "checking whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler""... $ac_c" 1>&6
+-echo "configure:1189: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler" >&5
++echo "configure:1180: checking whether the C compiler ($CC $CFLAGS $LDFLAGS) is a cross-compiler" >&5
+ echo "$ac_t""$ac_cv_prog_cc_cross" 1>&6
+ cross_compiling=$ac_cv_prog_cc_cross
+ 
+ echo $ac_n "checking whether we are using GNU C""... $ac_c" 1>&6
+-echo "configure:1194: checking whether we are using GNU C" >&5
++echo "configure:1185: checking whether we are using GNU C" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_gcc'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1199,7 +1190,7 @@
+   yes;
+ #endif
+ EOF
+-if { ac_try='${CC-cc} -E conftest.c'; { (eval echo configure:1203: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; } | egrep yes >/dev/null 2>&1; then
++if { ac_try='${CC-cc} -E conftest.c'; { (eval echo configure:1194: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; } | egrep yes >/dev/null 2>&1; then
+   ac_cv_prog_gcc=yes
+ else
+   ac_cv_prog_gcc=no
+@@ -1218,7 +1209,7 @@
+ ac_save_CFLAGS="$CFLAGS"
+ CFLAGS=
+ echo $ac_n "checking whether ${CC-cc} accepts -g""... $ac_c" 1>&6
+-echo "configure:1222: checking whether ${CC-cc} accepts -g" >&5
++echo "configure:1213: checking whether ${CC-cc} accepts -g" >&5
+ if eval "test \"`echo '$''{'ac_cv_prog_cc_g'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1250,16 +1241,10 @@
+ fi
+ 
+ 
+-if test "x$with_dsssl_dir" = "x" ; then
+-  dirs="/usr/lib/sgml/stylesheets/nwalsh-modular /usr/lib/sgml/stylesheet/dsssl/docbook/nwalsh /usr/lib/dsssl/stylesheets/docbook /usr/share/sgml/docbkdsl"
+-else
+-  dirs=$with_dsssl_dir
+-fi
+- 
+ # Extract the first word of "perl", so it can be a program name with args.
+ set dummy perl; ac_word=$2
+ echo $ac_n "checking for $ac_word""... $ac_c" 1>&6
+-echo "configure:1263: checking for $ac_word" >&5
++echo "configure:1248: checking for $ac_word" >&5
+ if eval "test \"`echo '$''{'ac_cv_path_PERL'+set}'`\" = set"; then
+   echo $ac_n "(cached) $ac_c" 1>&6
+ else
+@@ -1295,26 +1280,6 @@
+    { echo "configure: error: perl not found" 1>&2; exit 1; }
+ fi
+ 
+-echo $ac_n "checking for DocBook stylesheets""... $ac_c" 1>&6
+-echo "configure:1300: checking for DocBook stylesheets" >&5
+-
+-DSSSL_DIR=""
+-for i in $dirs ; do
+-  if test -f $i/html/docbook.dsl ; then
+-    DSSSL_DIR=$i
+-  fi
+-done
+-
+-if test "x$DSSSL_DIR" = x ; then
+-  { echo "configure: error: 
+-*** Cannot find DocBook stylesheets in "$dirs". 
+-*** Perhaps you need to specify the --with-dsssl-dir=PATH option?" 1>&2; exit 1; }
+-fi
+-
+-
+-
+-echo "$ac_t""found" 1>&6
+-
+ if test "x$GCC" = "xyes"; then
+   if test -z "`echo "$CFLAGS" | grep "\-Wall" 2> /dev/null`" ; then
+     CFLAGS="$CFLAGS -Wall"
+@@ -1489,7 +1454,6 @@
+ s%@SET_MAKE@%$SET_MAKE%g
+ s%@CC@%$CC%g
+ s%@PERL@%$PERL%g
+-s%@DSSSL_DIR@%$DSSSL_DIR%g
+ 
+ CEOF
+ EOF
