@@ -1,0 +1,3426 @@
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/ChangeLog gtk-doc/ChangeLog
+--- gtk-doc-0.9/ChangeLog	Fri Feb  1 23:23:35 2002
++++ gtk-doc/ChangeLog	Tue Sep 17 07:10:54 2002
+@@ -1,3 +1,184 @@
++Tue Sep 17 01:07:51 2002  Jonathan Blandford  <jrb@gnome.org>
++
++	* gtk-doc.xsl: output the chunks in UTF-8 so other tools can use
++	them.
++
++2002-09-03  James Henstridge  <james@daa.com.au>
++
++	* gtk-doc.xsl: turn on rendering of variablelists as tables, and
++	set CSS rules to style .variablelist instead of .informaltable.
++
++	* gtk-doc.dsl.in (variablelist): override the variablelist handler
++	instead of the tgroups.
++
++	* gtkdoc-mkdb.in (OutputStruct): use a <variablelist> for listing
++	the field descriptions.
++	(OutputEnum): same here.
++	(OutputParamDescriptions): and here.
++
++2002-08-12  James Henstridge  <james@daa.com.au>
++
++	* gtk-doc.xsl: include devhelp.xsl, and call generate.devhelp when
++	processing the docbook/xml input.
++
++	* devhelp.xsl: new file, implements .devhelp file output.
++
++2002-08-18  Havoc Pennington  <hp@pobox.com>
++
++	* autogen.sh: hardcode aclocal-1.4/automake-1.4 so that users with
++	both automake 1.6 and 1.4 installed get the right automake. Means
++	compilation from CVS will now require the latest automake 1.4
++	release, or manually creating symlinks called "automake-1.4" and
++	"aclocal-1.4"
++
++2002-08-08  James Henstridge  <james@daa.com.au>
++
++	* gtk-doc.xsl: add a gtkdoc.bookname param, and include it in the
++	index.sgml output (if not empty).
++
++	* gtkdoc-mkhtml.in: only perform the sed operation if we are using
++	Jade, and pass the module name as a parameter when using xsltproc.
++
++2002-08-04  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-scangobj.in: Don't try to list signals on types which
++	don't support signals, e.g. boxed types.
++
++2002-06-14  jacob berkman  <jacob@ximian.com>
++
++	* gtkdoc-mkdb.in: do the version check before help, so --version
++	doesn't output --help (should fix recent build bustage)
++
++2002-06-12  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkdb.in: Make header-grabbing work without an explicit
++	--main-sgml-file argument.
++	
++	* gtkdoc-mkdb.in: Emit the object hierarchy as a <screen> rather
++	than a <literallayout>, since the Docbook XSL stylesheets don't
++	handle <link>s inside <literallayout>. 
++	
++	* gtkdoc-mkdb.in: Decide wether to generate standalone documents 
++	for XIncluding or entities based on the presence of the XInclude 
++	namespace declaration on the document element.
++
++2002-06-09  James Henstridge  <james@daa.com.au>
++
++	* gtkdoc-mkdb.in: try to grab the header off the top of the main
++	sgml file.
++
++2002-05-31  James Henstridge  <james@daa.com.au>
++
++	* gtkdoc-mkdb.in (OutputSGML): put XIncludes in the $book_bottom
++	variable.
++	(OutputBook): add the XInclude namespace declaration to the book
++	element.
++
++	* gtkdoc-mkhtml.in (declaration): if the document looks like XML,
++	process it with xsltproc.
++
++	* configure.in: check for xsltproc.
++
++	* gtk-doc.xsl: start of XSLT template for converting docbook/xml
++	to HTML.
++
++2002-06-03  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkdb.in (ConvertSGMLChars): Don't use Posix character
++	classes. Perl < 5.6 doesn't have them; and the API doc autobuilder
++	on widget.gnome.org has an old Perl. 
++
++2002-05-29  Matthias Clasen  <maclas@gmx.de>
++
++	Fixes for #77193:
++	
++	* gtkdoc-mkdb.in (OutputSGML): Call GetSignals, GetArgs and
++	GetHierarchy for each symbol here and accumulate.
++	(OutputSGMLFile): Get signal, argument and hierarchy information
++	from the caller.
++	(GetSignals, GetArgs, GetHierarchy): Don't wrap the return value
++	in a refsect1, so that the results of multiple calls can be accumulated.
++
++2002-05-28  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkdb.in (ConvertSGMLChars): Make this work correctly
++	for empty elements and XML comments in doc comments.
++
++2002-05-27  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkdb.in (ReadTemplateFile, OutputSGMLFile): 
++	Use only the basename of the template file in the key for the
++	symbol table, in order to decouple the file extensions of the
++	template files and the generated entities (we want to generate
++	.xml entities from .sgml template files when emitting XML). 
++
++2002-05-25  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkdb.in (ConvertSGMLChars): New function which tries to
++	be a bit more clever when escaping SGML syntax characters. 
++	(ScanSourceFile): Use ConvertSGMLChars instead of CreateValidSGML.
++	This reduces the work needed to make gtk-doc emit XML (where <, &
++	and friends must always be escaped).
++
++2002-05-18  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkhtml.in: Detect whether we're processing SGML or XML. 
++
++	* gtkdoc-mkdb.in: New option --output-format to switch between
++	SGML and XML output.
++
++	* Makefile.am (EXTRA_DIST): Add xml.dcl
++	
++	* xml.dcl: The XML declaration.
++
++2002-05-06  jacob berkman  <jacob@ximian.com>
++
++	* gtkdoc-scangobj.in: add an include for the GTK_CHECK_VERSION
++	macro
++
++2002-05-05  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-scangobj.in: Output style properties.  (#80659)
++
++	* gtkdoc-mkdb.in (GetArgs): Return separate sections for
++	properties, child properties and style properties.  (#80659)
++
++2002-05-03  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-scangobj.in: Fix for segfault in scangobj-generated C
++	program on Solaris.  (#80606, Jacob Berkman)
++
++2002-05-01  Matthias Clasen  <maclas@gmx.de>
++
++	* tools/docpercentages.pl: Add the script which Owen uses for the 
++	d.g.o online API docs. Its easier to keep in sync here.
++
++	* gtkdoc-mkdb.in (OutputMissingDocumentation): Fix
++	$MODULE-undocumented.txt for d.g.o online API docs.
++	
++	* gtkdoc-mkdb.in (GetArgs): Use blurbs for property documentation.
++
++	* gtkdoc-scangobj.in: Output child properties. Output nicks and
++	blurbs for properties.
++
++2002-04-28  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-mkdb.in (ScanSourceFile): Don't scan for return value
++	descriptions unnecessarily.  (#65997)
++
++2002-03-11  Matthias Clasen  <maclas@gmx.de>
++
++	* gtkdoc-scangobj.in, gtkdoc-mkdb.in: Create docs for signals on interfaces.
++
++2002-02-01  Damon Chaplin  <damon@ximian.com>
++
++	* configure.in: check for openjade or jade. Patch from Stefan Kost
++	<kost@imn.htwk-leipzig.de>.
++
++	* gtkdoc-mkhtml.in: use @JADE@ so the correct version of jade is used.
++
++	* autogen.sh: commented out autoheader since we don't have a config.h.
++
+ 2002-01-18  Damon Chaplin  <damon@ximian.com>
+ 
+ 	* Released 0.9.
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/MAINTAINERS gtk-doc/MAINTAINERS
+--- gtk-doc-0.9/MAINTAINERS	Thu Jan  1 01:00:00 1970
++++ gtk-doc/MAINTAINERS	Sun May 20 02:25:42 2001
+@@ -0,0 +1,2 @@
++Email: damon@ximian.com
++Email: otaylor@redhat.com
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/Makefile.am gtk-doc/Makefile.am
+--- gtk-doc-0.9/Makefile.am	Fri Feb  1 23:14:42 2002
++++ gtk-doc/Makefile.am	Wed Aug 28 10:13:28 2002
+@@ -14,11 +14,17 @@
+ gtkdocdata_DATA = \
+ 	gtkdoc-common.pl	\
+         gtk-doc.dsl		\
+-	gtk-doc.dcl
++	gtk-doc.dcl		\
++	gtk-doc.xsl		\
++	devhelp.xsl		\
++	xml.dcl
+ 
+ EXTRA_DIST= \
+ 	gtk-doc.spec.in	\
+-	gtk-doc.dcl
++	gtk-doc.dcl  	\
++	gtk-doc.xsl	\
++	devhelp.xsl	\
++	xml.dcl
+ 
+ dist-hook:
+ 	mkdir $(distdir)/doc
+@@ -34,3 +40,4 @@
+ 	cp -pr $(srcdir)/tools/* $(distdir)/tools
+ 	rm -rf $(distdir)/tools/CVS
+ 	cp gtk-doc.spec $(distdir)
++
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/acconfig.h gtk-doc/acconfig.h
+--- gtk-doc-0.9/acconfig.h	Thu Jan  1 01:00:00 1970
++++ gtk-doc/acconfig.h	Tue Nov 24 07:00:34 1998
+@@ -0,0 +1,25 @@
++/* acconfig.h
++   This file is in the public domain.
++
++   Descriptive text for the C preprocessor macros that
++   the distributed Autoconf macros can define.
++   No software package will use all of them; autoheader copies the ones
++   your configure.in uses into your configuration header file templates.
++
++   The entries are in sort -df order: alphabetical, case insensitive,
++   ignoring punctuation (such as underscores).  Although this order
++   can split up related entries, it makes it easier to check whether
++   a given entry is in the file.
++
++   Leave the following blank line there!!  Autoheader needs it.  */
++
++
++/* Other stuff */
++/* #undef PACKAGE */
++/* #undef VERSION */
++
++
++/* Leave that blank line there!!  Autoheader needs it.
++   If you're adding to this file, keep in mind:
++   The entries are in sort -df order: alphabetical, case insensitive,
++   ignoring punctuation (such as underscores).  */
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/configure.in gtk-doc/configure.in
+--- gtk-doc-0.9/configure.in	Thu Jan 24 00:41:38 2002
++++ gtk-doc/configure.in	Thu Jun 13 19:22:25 2002
+@@ -7,14 +7,37 @@
+ AC_ISC_POSIX
+ AC_PROG_CC
+ 
+-
++dnl
++dnl Check for Perl.
++dnl
+ AC_PATH_PROG(PERL, perl)
+ if test -z "$PERL"; then
+    AC_MSG_ERROR([perl not found])
+ fi
+ 
+ 
++dnl
++dnl Check for jade or openjade.
++dnl
++AC_PATH_PROG(JADE, openjade)
++if test -z "$JADE"; then
++  AC_PATH_PROG(JADE, jade)
++  if test -z "$JADE"; then
++    AC_MSG_ERROR([openjade/jade not found])
++  fi
++fi
++
++dnl
++dnl Check for xsltproc
++dnl
++AC_PATH_PROG(XSLTPROC, xsltproc)
++if test -z "$XSLTPROC"; then
++  AC_MSG_ERROR([xsltproc not found])
++fi
++
++dnl
+ dnl Set PACKAGE_DATA_DIR so we can find the script containing common routines.
++dnl
+ if test "x${datadir}" = 'x${prefix}/share'; then
+   if test "x${prefix}" = "xNONE"; then
+     PACKAGE_DATA_DIR="${ac_default_prefix}/share/${PACKAGE}"
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/devhelp.xsl gtk-doc/devhelp.xsl
+--- gtk-doc-0.9/devhelp.xsl	Thu Jan  1 01:00:00 1970
++++ gtk-doc/devhelp.xsl	Wed Aug 28 10:13:28 2002
+@@ -0,0 +1,131 @@
++<?xml version='1.0'?> <!--*- mode: xml -*-->
++<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
++                version='1.0'
++                xmlns="http://www.devhelp.net/book"
++                exclude-result-prefixes="#default">
++
++  <xsl:template name="generate.devhelp">
++    <xsl:call-template name="write.chunk">
++      <xsl:with-param name="filename">
++        <xsl:choose>
++          <xsl:when test="$gtkdoc.bookname">
++            <xsl:value-of select="$gtkdoc.bookname"/>
++          </xsl:when>
++          <xsl:otherwise>
++            <xsl:text>book</xsl:text>
++          </xsl:otherwise>
++        </xsl:choose>
++        <xsl:text>.devhelp</xsl:text>
++      </xsl:with-param>
++      <xsl:with-param name="method" select="'xml'"/>
++      <xsl:with-param name="indent" select="'yes'"/>
++      <xsl:with-param name="encoding" select="'utf-8'"/>
++      <xsl:with-param name="content">
++        <xsl:call-template name="devhelp"/>
++      </xsl:with-param>
++    </xsl:call-template>
++  </xsl:template>
++
++  <xsl:template name="devhelp">
++    <xsl:variable name="title">
++      <xsl:apply-templates select="." mode="generate.devhelp.toc.title.mode"/>
++    </xsl:variable>
++    <xsl:variable name="link">
++      <xsl:call-template name="href.target"/>
++    </xsl:variable>
++    <xsl:variable name="author">
++      <xsl:if test="articleinfo|bookinfo">
++        <xsl:apply-templates mode="generate.devhelp.authors"
++                             select="articleinfo|bookinfo"/>
++      </xsl:if>
++    </xsl:variable>
++    <xsl:variable name="toc.nodes" select="part|reference|preface|chapter|
++                                           appendix|article|bibliography|
++                                           glossary|index|refentry|
++                                           bridgehead|sect1"/>
++
++    <book title="{$title}" link="{$link}" author="{$author}" name="{$gtkdoc.bookname}">
++      <xsl:if test="$toc.nodes">
++        <chapters>
++          <xsl:apply-templates select="$toc.nodes"
++                               mode="generate.devhelp.toc.mode"/>
++        </chapters>
++      </xsl:if>
++      <functions>
++        <xsl:apply-templates select="//refsect2"
++                             mode="generate.devhelp.index.mode"/>
++      </functions>
++    </book>
++  </xsl:template>
++
++  <xsl:template match="*" mode="generate.devhelp.toc.mode">
++    <xsl:variable name="title">
++      <xsl:apply-templates select="." mode="generate.devhelp.toc.title.mode"/>
++    </xsl:variable>
++    <xsl:variable name="target">
++      <xsl:variable name="anchor" select="title/anchor"/>
++      <xsl:choose>
++        <xsl:when test="$anchor">
++          <xsl:call-template name="href.target">
++            <xsl:with-param name="object" select="$anchor"/>
++          </xsl:call-template>
++        </xsl:when>
++        <xsl:otherwise>
++          <xsl:call-template name="href.target"/>
++        </xsl:otherwise>
++      </xsl:choose>
++    </xsl:variable>
++
++    <sub name="{$title}" link="{$target}">
++      <xsl:apply-templates select="section|sect1|sect2|
++                                   refentry|refsect|refsect1|refsect2|
++                                   bridgehead|part"
++                           mode="generate.devhelp.toc.mode"/>
++    </sub>
++  </xsl:template>
++
++  <xsl:template match="*" mode="generate.devhelp.index.mode">
++    <xsl:variable name="title" select="title"/>
++    <xsl:variable name="anchor" select="title/anchor"/>
++    <xsl:variable name="target">
++      <xsl:choose>
++        <xsl:when test="$anchor">
++          <xsl:call-template name="href.target">
++            <xsl:with-param name="object" select="$anchor"/>
++          </xsl:call-template>
++        </xsl:when>
++        <xsl:otherwise>
++          <xsl:call-template name="href.target"/>
++        </xsl:otherwise>
++      </xsl:choose>
++    </xsl:variable>
++    <function name="{$title}" link="{$target}"/>
++  </xsl:template>
++
++  <!-- get title -->
++  <xsl:template match="article" mode="generate.devhelp.toc.title.mode">
++    <xsl:value-of select="articleinfo/title"/>
++  </xsl:template>
++  <xsl:template match="book" mode="generate.devhelp.toc.title.mode">
++    <xsl:value-of select="bookinfo/title"/>
++  </xsl:template>
++  <xsl:template match="refentry" mode="generate.devhelp.toc.title.mode">
++    <xsl:value-of select="refmeta/refentrytitle"/>
++  </xsl:template>
++  <xsl:template match="*" mode="generate.devhelp.toc.title.mode">
++    <xsl:value-of select="title"/>
++  </xsl:template>
++
++  <!-- generate list of authors ... -->
++  <xsl:template match="articleinfo|bookinfo" mode="generate.devhelp.authors">
++    <xsl:for-each select="authorgroup/author">
++      <xsl:value-of select="firstname"/>
++      <xsl:text> </xsl:text>
++      <xsl:value-of select="surname"/>
++      <xsl:if test="not(last())">
++        <xsl:text>, </xsl:text>
++      </xsl:if>
++    </xsl:for-each>
++  </xsl:template>
++
++</xsl:stylesheet>
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtk-doc.cat gtk-doc/gtk-doc.cat
+--- gtk-doc-0.9/gtk-doc.cat	Thu Jan  1 01:00:00 1970
++++ gtk-doc/gtk-doc.cat	Tue Nov 24 07:00:34 1998
+@@ -0,0 +1,4 @@
++  -- ...................................................................... --
++  -- Modified GTK+ DocBook driver file .................................................. --
++
++PUBLIC "-//Gnome//DTD DocBook V3.0 extension//EN" "gtk-doc.dtd"
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtk-doc.dcl gtk-doc/gtk-doc.dcl
+--- gtk-doc-0.9/gtk-doc.dcl	Wed Nov 21 22:05:17 2001
++++ gtk-doc/gtk-doc.dcl	Thu Jun 13 19:22:25 2002
+@@ -1,8 +1,7 @@
+ <!SGML  "ISO 8879:1986"
+   -- ...................................................................... --
+-  -- this is a modified version of the DocBook SGML declaration 4.1  --
+-  -- NAMELEN has been bumped from 44 to 256                          --
+-  -- file gtk-doc.dcl ..................................................... --
++  -- DocBook SGML declaration V3.1 ........................................ --
++  -- file docbook.dcl ..................................................... --
+ 
+ CHARSET
+ 
+@@ -102,6 +101,6 @@
+ 
+ APPINFO NONE
+ 
+-  -- End of DocBook SGML declaration V4.1 ................................. --
++  -- End of DocBook SGML declaration V3.1 ................................. --
+   -- ...................................................................... --
+ >
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtk-doc.dsl.in gtk-doc/gtk-doc.dsl.in
+--- gtk-doc-0.9/gtk-doc.dsl.in	Mon Feb  5 22:50:56 2001
++++ gtk-doc/gtk-doc.dsl.in	Mon Sep  9 03:46:56 2002
+@@ -76,19 +76,14 @@
+      (list "WIDTH" ($table-width$))
+      (list "CELLPADDING" "6"))))
+ 
+-;; This overrides the tgroup definition (copied from 1.20, dbtable.dsl).
+-;; It changes the table background color, cell spacing and cell padding.
+-(element tgroup
+-  (let* ((wrapper   (parent (current-node)))
+-	 (frameattr (attribute-string (normalize "frame") wrapper))
+-	 (pgwide    (attribute-string (normalize "pgwide") wrapper))
+-	 (footnotes (select-elements (descendants (current-node)) 
+-				     (normalize "footnote")))
+-	 (border (if (equal? frameattr (normalize "none"))
+-		     '(("BORDER" "0"))
+-		     '(("BORDER" "1"))))
+-	 (roleattr (attribute-string (normalize "role") wrapper))
+ 
++;; This overrides the variablelist definition (copied from 1.76,
++;; dblists.dsl).  It changes the table background color, cell spacing
++;; and cell padding.
++;;
++;; I have also removed the code to handle the non-table case.
++(element variablelist
++  (let* ((roleattr (attribute-string (normalize "role") (current-node)))
+ 	 ;; FIXME: I thought that I should use normalize ("params") etc. here,
+ 	 ;; but that doesn't work. Anyone know why?
+ 	 (bgcolor (cond ((equal? roleattr "params")
+@@ -98,28 +93,77 @@
+ 			((equal? roleattr "enum")
+ 			 '(("BGCOLOR" "#F0F0D0")))
+ 			(else
+-			 '(("BGCOLOR" "#FFFFFF")))))
++			 '()))))
++
++    (make sequence
++      (if %spacing-paras%
++          (make element gi: "P" (empty-sosofo))
++          (empty-sosofo))
++      (para-check)
++
++      (make element gi: "TABLE"
++            attributes: (append
++                         '(("CLASS" "VARIABLELIST")
++                           ("BORDER" "0")
++                           ("CELLSPACING" "0")
++                           ("CELLPADDING" "4")
++                           ("WIDTH" "100%"))
++                          bgcolor)
++            (if %html40%
++                (make element gi: "TBODY"
++                      (with-mode variablelist-table
++                        (process-children)))
++                (with-mode variablelist-table
++                  (process-children))))
++      (para-check 'restart))))
++
++(mode variablelist-table
++  (element (variablelist title)
++    (make element gi: "TR"
++          attributes: '(("CLASS" "TITLE"))
++          (make element gi: "TH"
++                attributes: '(("ALIGN" "LEFT")
++                              ("VALIGN" "TOP")
++                              ("COLSPAN" "2"))
++                (process-children))))
++
++  (element varlistentry
++    (let* ((terms      (select-elements (children (current-node))
++                                        (normalize "term")))
++           (listitem   (select-elements (children (current-node))
++                                        (normalize "listitem"))))
++
++      (make element gi: "TR"
++            (make element gi: "TD"
++                  attributes: '(("ALIGN" "RIGHT")
++                                ("VALIGN" "TOP")
++                                ("WIDTH" "20%"))
++                  (make empty-element gi: "A"
++                        attributes: (list
++                                     (list "NAME" (element-id))))
++                  (process-node-list terms))
++            (make element gi: "TD"
++                  attributes: '(("ALIGN" "LEFT")
++                                ("VALIGN" "TOP")
++                                ("WIDTH" "80%"))
++                  (process-node-list listitem)))))
++  
++  (element (varlistentry term)
++    (make sequence
++      (if %css-decoration%
++          (make element gi: "SPAN"
++                attributes: '(("STYLE" "white-space: nowrap"))
++                (process-children-trim))
++          (make element gi: "NOBR"
++                (process-children-trim)))
++      (if (not (last-sibling?))
++          (literal ", ")
++          (literal ""))))
++
++  (element (varlistentry listitem)
++    (process-children))
++)
+ 
+-	 (width (if (equal? pgwide "1")
+-		    (list (list "WIDTH" ($table-width$)))
+-		    '()))
+-	 (head (select-elements (children (current-node)) (normalize "thead")))
+-	 (body (select-elements (children (current-node)) (normalize "tbody")))
+-	 (feet (select-elements (children (current-node)) (normalize "tfoot"))))
+-    (make element gi: "TABLE"
+-	  attributes: (append
+-		       border
+-		       width
+-		       bgcolor
+-		       '(("CELLSPACING" "0"))
+-		       '(("CELLPADDING" "4"))
+-		       (if %cals-table-class%
+-			   (list (list "CLASS" %cals-table-class%))
+-			   '()))
+-	  (process-node-list head)
+-	  (process-node-list body)
+-	  (process-node-list feet)
+-	  (make-table-endnotes))))
+ 
+ ;; This overrides the refsect2 definition (copied from 1.20, dbrfntry.dsl).
+ ;; It puts a horizontal rule before each function/struct/... description,
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtk-doc.dtd gtk-doc/gtk-doc.dtd
+--- gtk-doc-0.9/gtk-doc.dtd	Thu Jan  1 01:00:00 1970
++++ gtk-doc/gtk-doc.dtd	Tue Nov 24 07:00:33 1998
+@@ -0,0 +1,10 @@
++<!-- Add an href attribute to the ANCHOR element -->
++
++<!ENTITY % local.anchor.attrib
++"HRef      CDATA      #IMPLIED">
++
++<!-- ...................................................................... -->
++ <!-- Original DTD ......................................................... -->
++
++<!ENTITY % orig-docbook PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
++%orig-docbook;
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtk-doc.xsl gtk-doc/gtk-doc.xsl
+--- gtk-doc-0.9/gtk-doc.xsl	Thu Jan  1 01:00:00 1970
++++ gtk-doc/gtk-doc.xsl	Tue Sep 17 07:10:54 2002
+@@ -0,0 +1,332 @@
++<?xml version='1.0'?> <!--*- mode: xml -*-->
++<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
++                version='1.0'
++                xmlns="http://www.w3.org/TR/xhtml1/transitional"
++                exclude-result-prefixes="#default">
++
++  <!-- import the chunked XSL stylesheet -->
++  <xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/chunk.xsl"/>
++  <xsl:include href="devhelp.xsl"/>
++
++  <!-- change some parameters -->
++  <xsl:param name="toc.section.depth">1</xsl:param>
++
++  <xsl:param name="default.encoding" select="UTF-8"/>
++  <xsl:param name="chapter.autolabel" select="0"/>
++  <xsl:param name="use.id.as.filename" select="'1'"/>
++  <xsl:param name="html.ext" select="'.html'"/>
++  <xsl:param name="refentry.generate.name" select="0"/>
++  <xsl:param name="refentry.generate.title" select="1"/>
++
++  <!-- display variablelists as tables -->
++  <xsl:param name="variablelist.as.table" select="1"/>
++
++  <!-- this gets set on the command line ... -->
++  <xsl:param name="gtkdoc.bookname" select="''"/>
++
++  <!-- ========================================================= -->
++  <!-- template to create the index.sgml anchor index -->
++
++  <xsl:template match="book|article">
++    <xsl:apply-imports/>
++
++    <!-- generate the index.sgml href index -->
++    <xsl:call-template name="generate.index"/>
++    <xsl:call-template name="generate.devhelp"/>
++  </xsl:template>
++
++  <xsl:template name="generate.index">
++    <xsl:call-template name="write.text.chunk">
++      <xsl:with-param name="filename" select="'index.sgml'"/>
++      <xsl:with-param name="content">
++        <!-- check all anchor and refentry elements -->
++        <xsl:apply-templates select="//anchor|refentry"
++                             mode="generate.index.mode"/>
++      </xsl:with-param>
++      <xsl:with-param name="encoding" select="'utf-8'"/>
++    </xsl:call-template>
++  </xsl:template>
++
++  <xsl:template match="*" mode="generate.index.mode">
++    <xsl:if test="not(@href)">
++      <xsl:text>&lt;ANCHOR id=&quot;</xsl:text>
++      <xsl:value-of select="@id"/>
++      <xsl:text>&quot; href=&quot;</xsl:text>
++      <xsl:if test="$gtkdoc.bookname">
++        <xsl:value-of select="$gtkdoc.bookname"/>
++        <xsl:text>/</xsl:text>
++      </xsl:if>
++      <xsl:call-template name="href.target"/>
++      <xsl:text>&quot;&gt;
++</xsl:text>
++    </xsl:if>
++  </xsl:template>
++
++  <!-- ========================================================= -->
++  <!-- template to output gtkdoclink elements for the unknown targets -->
++
++  <xsl:template match="link">
++    <xsl:choose>
++      <xsl:when test="id(@linkend)">
++        <xsl:apply-imports/>
++      </xsl:when>
++      <xsl:otherwise>
++        <GTKDOCLINK HREF="{@linkend}">
++          <xsl:apply-templates/>
++        </GTKDOCLINK>
++      </xsl:otherwise>
++    </xsl:choose>
++  </xsl:template>
++
++  <!-- ========================================================= -->
++  <!-- Below are the visual portions of the stylesheet.  They provide
++       the normal gtk-doc output style. -->
++
++  <xsl:param name="shade.verbatim" select="0"/>
++  <xsl:param name="refentry.separator" select="0"/>
++
++  <xsl:template match="refsect2">
++    <xsl:if test="preceding-sibling::refsect2">
++      <hr/>
++    </xsl:if>
++    <xsl:apply-imports/>
++  </xsl:template>
++
++  <xsl:template name="user.head.content">
++    <style>
++      <xsl:text>
++        .synopsis, .programlisting {
++            background: #D6E8FF;
++            padding: 4px;
++        }
++        .variablelist {
++            background: #FFD0D0;
++            padding: 4px;
++        }
++      </xsl:text>
++    </style>
++  </xsl:template>
++
++  <xsl:template match="title" mode="book.titlepage.recto.mode">
++    <table width="100%" border="0" bgcolor="#000000"
++           cellpadding="1" cellspacing="0">
++      <tr>
++        <th align="center" valign="center">
++          <p class="{name(.)}">
++            <font color="#FFFFFF" size="7">
++              <xsl:value-of select="."/>
++            </font>
++          </p>
++        </th>
++      </tr>
++    </table>
++  </xsl:template>
++
++  <xsl:template name="header.navigation">
++    <xsl:param name="prev" select="/foo"/>
++    <xsl:param name="next" select="/foo"/>
++    <xsl:variable name="home" select="/*[1]"/>
++    <xsl:variable name="up" select="parent::*"/>
++
++    <xsl:if test="$suppress.navigation = '0' and $home != .">
++      <table bgcolor="#000000" width="100%" summary="Navigation header"
++             cellpadding="1" cellspacing="0">
++        <tr>
++          <th colspan="4" align="center">
++            <font color="#FFFFFF" size="5">
++              <xsl:apply-templates select="$home" mode="object.title.markup"/>
++            </font>
++          </th>
++        </tr>
++        <tr>
++          <td width="25%" bgcolor="#C00000" align="left">
++            <xsl:if test="count($prev) > 0">
++              <a accesskey="p">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$prev"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:text>&lt;&lt;&lt;&#160;</xsl:text>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-prev</xsl:with-param>
++                    </xsl:call-template>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++          <td width="25%" bgcolor="#0000C0" align="center">
++            <xsl:if test="$home != .">
++              <a accesskey="h">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$home"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-home</xsl:with-param>
++                    </xsl:call-template>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++          <td width="25%" bgcolor="#00C000" align="center">
++            <xsl:if test="count($up) > 0 and $up != $home">
++              <a accesskey="u">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$up"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-up</xsl:with-param>
++                    </xsl:call-template>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++          <td width="25%" bgcolor="#C00000" align="right">
++            <xsl:if test="count($next) > 0">
++              <a accesskey="n">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$next"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-next</xsl:with-param>
++                    </xsl:call-template>
++                    <xsl:text>&#160;&gt;&gt;&gt;</xsl:text>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++        </tr>
++      </table>
++    </xsl:if>
++  </xsl:template>
++
++  <xsl:template name="footer.navigation">
++    <xsl:param name="prev" select="/foo"/>
++    <xsl:param name="next" select="/foo"/>
++    <xsl:variable name="home" select="/*[1]"/>
++    <xsl:variable name="up" select="parent::*"/>
++
++    <xsl:if test="$suppress.navigation = '0'">
++      <table bgcolor="#000000" width="100%" summary="Navigation footer"
++             cellpadding="1" cellspacing="0">
++        <tr>
++          <td width="25%" bgcolor="#C00000" align="left">
++            <xsl:if test="count($prev) > 0">
++              <a accesskey="p">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$prev"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:text>&lt;&lt;&lt;&#160;</xsl:text>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-prev</xsl:with-param>
++                    </xsl:call-template>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++          <td width="25%" bgcolor="#0000C0" align="center">
++            <xsl:if test="$home != .">
++              <a accesskey="h">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$home"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-home</xsl:with-param>
++                    </xsl:call-template>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++          <td width="25%" bgcolor="#00C000" align="center">
++            <xsl:if test="count($up) > 0 and $up != $home">
++              <a accesskey="u">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$up"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-up</xsl:with-param>
++                    </xsl:call-template>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++          <td width="25%" bgcolor="#C00000" align="right">
++            <xsl:if test="count($next) > 0">
++              <a accesskey="n">
++                <xsl:attribute name="href">
++                  <xsl:call-template name="href.target">
++                    <xsl:with-param name="object" select="$next"/>
++                  </xsl:call-template>
++                </xsl:attribute>
++                <font color="#FFFFFF" size="3">
++                  <b>
++                    <xsl:call-template name="gentext">
++                      <xsl:with-param name="key">nav-next</xsl:with-param>
++                    </xsl:call-template>
++                    <xsl:text>&#160;&gt;&gt;&gt;</xsl:text>
++                  </b>
++                </font>
++              </a>
++            </xsl:if>
++          </td>
++        </tr>
++        <tr>
++          <td colspan="2" align="left">
++            <xsl:if test="count($prev) > 0">
++              <font color="#FFFFFF" size="3">
++                <b>
++                  <xsl:apply-templates select="$prev"
++                                       mode="object.title.markup"/>
++                </b>
++              </font>
++            </xsl:if>
++          </td>
++          <td colspan="2" align="right">
++            <xsl:if test="count($next) > 0">
++              <font color="#FFFFFF" size="3">
++                <b>
++                  <xsl:apply-templates select="$next"
++                                       mode="object.title.markup"/>
++                </b>
++              </font>
++            </xsl:if>
++          </td>
++        </tr>
++      </table>
++    </xsl:if>
++  </xsl:template>
++
++</xsl:stylesheet>
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtkdoc-mkdb.in gtk-doc/gtkdoc-mkdb.in
+--- gtk-doc-0.9/gtkdoc-mkdb.in	Fri Jan 18 18:19:27 2002
++++ gtk-doc/gtkdoc-mkdb.in	Mon Sep  9 03:46:56 2002
+@@ -47,6 +47,7 @@
+ my $OUTPUT_ALL_SYMBOLS;
+ my $MAIN_SGML_FILE;
+ my $SGML_MODE;
++my $OUTPUT_FORMAT;
+ 
+ my %optctl = (module => \$MODULE,
+ 	      'source-dir' => \@SOURCE_DIRS,
+@@ -56,14 +57,19 @@
+ 	      'help' => \$PRINT_HELP,
+ 	      'main-sgml-file' => \$MAIN_SGML_FILE,
+ 	      'outputallsymbols' => \$OUTPUT_ALL_SYMBOLS,
+-	      'sgml-mode' => \$SGML_MODE);
+-GetOptions(\%optctl, "module=s", "source-dir:s", "output-dir:s", "version", "outputallsymbols", "main-sgml-file:s", "help", "sgml-mode");
++	      'sgml-mode' => \$SGML_MODE,
++	      'output-format' => \$OUTPUT_FORMAT);
++GetOptions(\%optctl, "module=s", "source-dir:s", "output-dir:s", "version", "outputallsymbols", "main-sgml-file:s", "help", "sgml-mode", "output-format:s");
+ 
+ if ($PRINT_VERSION) {
+     print "@VERSION@\n";
+     exit 0;
+ }
+ 
++if (!$MODULE) {
++    $PRINT_HELP = 1;
++}
++
+ if ($PRINT_HELP) {
+     print "gtkdoc-mkdb version @VERSION@\n";
+     print "\n--module=MODULE_NAME   Name of the doc module being parsed";
+@@ -72,19 +78,56 @@
+     print "\n--output-dir=DIRNAME   Directory to put the generated Docbook files in";
+     print "\n--tmpl-dir=DIRNAME     DIRECTORY in which template files may be found";
+     print "\n--main-sgml-file=FILE  File containing the toplevel SGML file.";
++    print "\n--output-format=FORMAT The format to use for the generated docbook, XML or SGML.";
+     print "\n--sgml-mode            Allow Docbook markup in inline documentation.";
+     print "\n--version              Print the version of this program";
+     print "\n--help                 Print this help\n";
+     exit 0;
+ }
+ 
++if (!$MAIN_SGML_FILE) {
++    $MAIN_SGML_FILE="${MODULE}-docs.sgml";
++}
++
++my ($empty_element_end, $doctype_header);
++
++if (lc($OUTPUT_FORMAT) eq "xml") {
++    $OUTPUT_FORMAT = "xml";
++    $empty_element_end = "/>";
++
++    if ($MAIN_SGML_FILE && -e $MAIN_SGML_FILE) {
++	print "scanning $MAIN_SGML_FILE";
++        open(INPUT, "<$MAIN_SGML_FILE") || die "Can't open $MAIN_SGML_FILE";
++	$doctype_header = "";
++	while (<INPUT>) {
++	    if (/^\s*<(book|chapter|article)/) {
++		if (index($_, "http://www.w3.org/2001/XInclude") < 0) {
++		    $doctype_header = "";
++		}
++	        last;
++	    }
++	    $doctype_header .= $_;
++	}
++	close(INPUT);
++    } else {
++        $doctype_header =
++"<?xml version=\"1.0\"?>\n" .
++"<!DOCTYPE book PUBLIC \"-//OASIS//DTD DocBook XML V4.1.2//EN\"\n" .
++"               \"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd\">\n";
++    }
++    $doctype_header =~ s/<!DOCTYPE \w+/<!DOCTYPE refentry/;
++} else {
++    $OUTPUT_FORMAT = "sgml";
++    $empty_element_end = ">";
++}
++
+ my $ROOT_DIR = ".";
+ 
+ # All the files are written in subdirectories beneath here.
+ $TMPL_DIR = $TMPL_DIR ? $TMPL_DIR : "$ROOT_DIR/tmpl";
+ 
+ # This is where we put all the DocBook output.
+-$SGML_OUTPUT_DIR = $SGML_OUTPUT_DIR ? $SGML_OUTPUT_DIR : "$ROOT_DIR/sgml";
++$SGML_OUTPUT_DIR = $SGML_OUTPUT_DIR ? $SGML_OUTPUT_DIR : "$ROOT_DIR/$OUTPUT_FORMAT";
+ 
+ # This file contains the object hierarchy.
+ my $OBJECT_TREE_FILE = "$ROOT_DIR/$MODULE.hierarchy";
+@@ -108,7 +151,8 @@
+ my @ArgNames;		# The Arg name.
+ my @ArgTypes;		# The Arg type - gint, GtkArrowType etc.
+ my @ArgFlags;		# How the Arg can be used - readable/writable etc.
+-
++my @ArgNicks;		# The nickname of the Arg.
++my @ArgBlurbs;          # Docstring of the Arg.
+ # These global hashes store declaration info keyed on a symbol name.
+ my %Declarations;
+ my %DeclarationTypes;
+@@ -203,9 +247,9 @@
+     print (OUTPUT <<EOF);
+ <informaltable pgwide="1" frame="none">
+ <tgroup cols="$cols">
+-<colspec colwidth="1*">
+-<colspec colwidth="1*">
+-<colspec colwidth="1*">
++<colspec colwidth="1*"${empty_element_end}
++<colspec colwidth="1*"${empty_element_end}
++<colspec colwidth="1*"${empty_element_end}
+ <tbody>
+ EOF
+ 
+@@ -254,6 +298,15 @@
+     my $details;
+     my $num_symbols;
+     my $changed = 0;
++    my $signals_synop = "";
++    my $signals_desc = "";
++    my $args_synop = "";
++    my $child_args_synop = "";
++    my $style_args_synop = "";
++    my $args_desc = "";
++    my $child_args_desc = "";
++    my $style_args_desc = "";
++    my $hierarchy = "";
+ 
+     while (<INPUT>) {
+ 	if (m/^#/) {
+@@ -286,7 +339,7 @@
+ 	    %SymbolDocs = ();
+ 	    %SymbolTypes = ();
+ 	    %SymbolParams = ();
+-	    &ReadTemplateFile ("$TMPL_DIR/$file.sgml", 1);
++	    &ReadTemplateFile ("$TMPL_DIR/$file", 1);
+ 	    &MergeSourceDocumentation;
+ 
+ 	} elsif (m/^<INCLUDE>(.*)<\/INCLUDE>/) {
+@@ -303,7 +356,6 @@
+ #	    print "End of section: $title\n";
+ 
+ 	    $file =~ s/\s/_/g;
+-	    $file .= ".sgml";
+ 
+ 	    # GtkObjects use their class name as the ID.
+ 	    my $section_id;
+@@ -314,16 +366,102 @@
+ 	    }
+ 
+ 	    if ($num_symbols > 0) {
+-		$book_top .= "<!ENTITY $section_id SYSTEM \"sgml/$file\">\n";
+-		$book_bottom .= "    &$section_id;\n";
++		if (lc($OUTPUT_FORMAT) eq "xml") {
++		    $book_bottom .= "    <xi:include href=\"xml/$file.xml\"/>\n";
++		} else {
++		    $book_top.="<!ENTITY $section_id SYSTEM \"sgml/$file.sgml\">\n";
++		    $book_bottom .= "    &$section_id;\n";
++		}
+ 
+ 		if ($section_includes eq "") {
+ 		    $section_includes = $includes;
+ 		}
+ 
++		if ($signals_synop ne '') {
++		    $signals_synop = <<EOF;
++<refsect1>
++<title>Signal Prototypes</title>
++<synopsis>
++
++${signals_synop}</synopsis>
++</refsect1>
++EOF
++		    $signals_desc  = <<EOF;
++<refsect1>
++<title>Signals</title>
++$signals_desc
++</refsect1>
++EOF
++		}
++		if ($args_synop ne '') {
++		    $args_synop = <<EOF;
++<refsect1>
++<title>Properties</title>
++<synopsis>
++
++${args_synop}</synopsis>
++</refsect1>
++EOF
++		    $args_desc  = <<EOF;
++<refsect1>
++<title>Properties</title>
++<variablelist>
++$args_desc
++</variablelist>
++</refsect1>
++EOF
++		}
++		if ($child_args_synop ne '') {
++		    $args_synop .= <<EOF;
++<refsect1>
++<title>Child Properties</title>
++<synopsis>
++
++${child_args_synop}</synopsis>
++</refsect1>
++EOF
++		    $args_desc .= <<EOF;
++<refsect1>
++<title>Child Properties</title>
++<variablelist>
++$child_args_desc
++</variablelist>
++</refsect1>
++EOF
++		}
++		if ($style_args_synop ne '') {
++		    $args_synop .= <<EOF;
++<refsect1>
++<title>Style Properties</title>
++<synopsis>
++
++${style_args_synop}</synopsis>
++</refsect1>
++EOF
++		    $args_desc .= <<EOF;
++<refsect1>
++<title>Style Properties</title>
++<variablelist>
++$style_args_desc
++</variablelist>
++</refsect1>
++EOF
++		}
++		if ($hierarchy ne "") {
++		    $hierarchy = <<EOF
++<refsect1>
++<title>Object Hierarchy</title>
++$hierarchy
++</refsect1>
++EOF
++		}
++
+ 		my $file_changed = &OutputSGMLFile ($file, $title, $section_id,
+ 						    $section_includes,
+-						    \$synopsis, \$details);
++						    \$synopsis, \$details,
++						    \$signals_synop, \$signals_desc,
++						    \$args_synop, \$args_desc,
++						    \$hierarchy);
+ 		if ($file_changed) {
+ 		    $changed = 1;
+ 		}
+@@ -332,20 +470,42 @@
+ 	    $subsection = "";
+ 	    $in_section = 0;
+ 	    $section_includes = "";
++	    $signals_synop = "";
++	    $signals_desc = "";
++	    $args_synop = "";
++	    $child_args_synop = "";
++	    $style_args_synop = "";
++	    $args_desc = "";
++	    $child_args_desc = "";
++	    $style_args_desc = "";
++	    $hierarchy = "";
+ 
+ 	} elsif (m/^(\S+)/) {
+ 	    my $symbol = $1;
+ #	    print "  Symbol: $symbol\n";
+ 
+-	    my $declaration = $Declarations{$1};
++	    my $declaration = $Declarations{$symbol};
+ 	    if (defined ($declaration)) {
+ 		# We don't want standard macros/functions of GtkObjects,
+ 		# or private declarations.
+ 		if ($subsection ne "Standard" && $subsection ne "Private") {
+ 		    my ($synop, $desc) = &OutputDeclaration ($symbol,
+ 							     $declaration);
++		    my ($sig_synop, $sig_desc) = &GetSignals ($symbol);
++		    my ($arg_synop, $child_arg_synop, $style_arg_synop,
++			$arg_desc, $child_arg_desc, $style_arg_desc) = &GetArgs ($symbol);
++		    my $hier = &GetHierarchy ($symbol);
+ 		    $synopsis .= $synop;
+ 		    $details .= $desc;
++		    $signals_synop .= $sig_synop;
++		    $signals_desc .= $sig_desc;
++		    $args_synop .= $arg_synop;
++		    $child_args_synop .= $child_arg_synop;
++		    $style_args_synop .= $style_arg_synop;
++		    $args_desc .= $arg_desc;
++		    $child_args_desc .= $child_arg_desc;
++		    $style_args_desc .= $style_arg_desc;
++		    $hierarchy .= $hier;
+ 		}
+ 
+ 		# Note that the declaration has been output.
+@@ -430,9 +590,9 @@
+     $synop .= "\n";
+ 
+     if ($args ne "") {
+-	$desc = "<refsect2>\n<title><anchor id=\"$id\">${symbol}()</title>\n";
++	$desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}${symbol}()</title>\n";
+     } else {
+-	$desc = "<refsect2>\n<title><anchor id=\"$id\">$symbol</title>\n";
++	$desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}$symbol</title>\n";
+     }
+     # Don't output the macro definition if is is a conditional macro or it
+     # looks like a function, i.e. starts with "g_" or "_?gnome_", or it is
+@@ -473,7 +633,7 @@
+     my ($symbol, $declaration) = @_;
+     my $id = &CreateValidSGMLID ($symbol);
+     my $synop = "typedef     <link linkend=\"$id\">$symbol</link>;\n";
+-    my $desc = "<refsect2>\n<title><anchor id=\"$id\">$symbol</title>\n";
++    my $desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}$symbol</title>\n";
+     if (!defined ($DeclarationConditional{$symbol})) {
+ 	$declaration = &CreateValidSGML ($declaration);
+ 	$desc .= "<programlisting>$declaration</programlisting>\n";
+@@ -518,7 +678,7 @@
+ 	$id = &CreateValidSGMLID ($symbol);
+     }
+     my $synop = "struct      <link linkend=\"$id\">$symbol</link>;\n";
+-    my $desc = "<refsect2>\n<title><anchor id=\"$id\">struct $symbol</title>\n";
++    my $desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}struct $symbol</title>\n";
+ 
+     # Form a pretty-printed, private-data-removed form of the declaration
+ 
+@@ -592,27 +752,23 @@
+ 	my %field_descrs = @$params;
+ 	
+ 	    $desc .= <<EOF;
+-<informaltable pgwide="1" frame="none" role="struct">
+-<tgroup cols="2">
+-<colspec colwidth="2*">
+-<colspec colwidth="8*">
+-<tbody>
++<variablelist role="struct">
+ EOF
+ 	while (@fields) {
+ 	    my $field_name = shift @fields;
+ 	    my $text = shift @fields;
+ 	    my $field_descr = $field_descrs{$field_name};
+ 
+-	    $desc .= "<row>\n<entry>$text</entry>\n";
++	    $desc .= "<varlistentry>\n<term>$text</term>\n";
+ 	    if (defined $field_descr) {
+-		$desc .= "<entry>".&ExpandAbbreviations($field_descr)."</entry>\n";
++		$desc .= "<listitem><para>".&ExpandAbbreviations($field_descr)."</para></listitem>\n";
+ 	    } else {
+-		$desc .= "<entry></entry>\n";
++		$desc .= "<listitem></listitem>\n";
+ 	    }
+-            $desc .= "</row>\n";
++            $desc .= "</varlistentry>\n";
+ 	}
+     
+-	$desc .= "</tbody></tgroup></informaltable>";
++	$desc .= "</variablelist>";
+     }
+     $desc .= "</refsect2>\n";
+     return ($synop, $desc);
+@@ -630,7 +786,7 @@
+     my ($symbol, $declaration) = @_;
+     my $id = &CreateValidSGMLID ($symbol);
+     my $synop = "enum        <link linkend=\"$id\">$symbol</link>;\n";
+-    my $desc = "<refsect2>\n<title><anchor id=\"$id\">enum $symbol</title>\n";
++    my $desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}enum $symbol</title>\n";
+     $declaration = &CreateValidSGML ($declaration);
+     $desc .= "<programlisting>$declaration</programlisting>\n";
+ 
+@@ -664,25 +820,21 @@
+ 	my %member_descrs = @$params;
+ 	
+ 	    $desc .= <<EOF;
+-<informaltable pgwide="1" frame="none" role="enum">
+-<tgroup cols="2">
+-<colspec colwidth="2*">
+-<colspec colwidth="8*">
+-<tbody>
++<variablelist role="enum">
+ EOF
+ 	for my $member_name (@members) {
+ 	    my $member_descr = $member_descrs{$member_name};
+ 	    
+-	    $desc .= "<row>\n<entry><literal>$member_name</literal></entry>\n";
++	    $desc .= "<varlistentry>\n<term><literal>$member_name</literal></term>\n";
+ 	    if (defined $member_descr) {
+-		$desc .= "<entry>".&ExpandAbbreviations($member_descr)."</entry>\n";
++		$desc .= "<listitem><para>".&ExpandAbbreviations($member_descr)."</para></listitem>\n";
+ 	    } else {
+-		$desc .= "<entry></entry>\n";
++		$desc .= "<listitem></listitem>\n";
+ 	    }
+-            $desc .= "</row>\n";
++            $desc .= "</varlistentry>\n";
+ 	}
+     
+-	$desc .= "</tbody></tgroup></informaltable>";
++	$desc .= "</variablelist>";
+     }
+ 
+     $desc .= "</refsect2>\n";
+@@ -701,7 +853,7 @@
+     my ($symbol, $declaration) = @_;
+     my $id = &CreateValidSGMLID ($symbol);
+     my $synop = "union       <link linkend=\"$id\">$symbol</link>;\n";
+-    my $desc = "<refsect2>\n<title><anchor id=\"$id\">union $symbol</title>\n";
++    my $desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}union $symbol</title>\n";
+     $declaration = &CreateValidSGML ($declaration);
+     $desc .= "<programlisting>$declaration</programlisting>\n";
+ 
+@@ -739,7 +891,7 @@
+ 	$synop = "extern      <link linkend=\"$id\">$symbol</link>;\n";
+     }
+ 
+-    my $desc = "<refsect2>\n<title><anchor id=\"$id\">$symbol</title>\n";
++    my $desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}$symbol</title>\n";
+     $declaration = &CreateValidSGML ($declaration);
+     $desc .= "<programlisting>$declaration</programlisting>\n";
+ 
+@@ -816,7 +968,7 @@
+     }
+ 
+     my $synop = $ret_type_output . $symbol_output . '(';
+-    my $desc = "<refsect2>\n<title><anchor id=\"$id\">${symbol} ()</title>\n";
++    my $desc = "<refsect2>\n<title><anchor id=\"$id\"${empty_element_end}${symbol} ()</title>\n";
+     $desc  .= "<programlisting>${ret_type_output}$symbol_desc_output(";
+ 
+     my $param_num = 0;
+@@ -947,37 +1099,33 @@
+ 		    $param_name = "...";
+ 		}
+ 		$param = &ExpandAbbreviations($param);
+-		$params_desc .= "<row><entry align=\"right\"><parameter>$param_name</parameter>&nbsp;:</entry>\n<entry>$param</entry></row>\n";
++		$params_desc .= "<varlistentry><term><parameter>$param_name</parameter>&nbsp;:</term>\n<listitem><para>$param</para></listitem></varlistentry>\n";
+ 	    }
+ 	}
+ 
+ 	# Signals have an implicit user_data parameter which we describe.
+ 	if ($symbol_type eq "SIGNAL") {
+-	    $params_desc .= "<row><entry align=\"right\"><parameter>user_data</parameter>&nbsp;:</entry>\n<entry>user data set when the signal handler was connected.</entry></row>\n";
++	    $params_desc .= "<varlistentry><term><parameter>user_data</parameter>&nbsp;:</term>\n<listitem><para>user data set when the signal handler was connected.</para></listitem></varlistentry>\n";
+ 	}
+ 
+ 	# Start a table if we need one.
+ 	if ($params_desc || $returns) {
+ 	    $output .= <<EOF;
+-<informaltable pgwide="1" frame="none" role="params">
+-<tgroup cols="2">
+-<colspec colwidth="2*">
+-<colspec colwidth="8*">
+-<tbody>
++<variablelist role="params">
+ EOF
+ 
+ 	    if ($params_desc ne "") {
+-#	        $output .= "<row><entry>Parameters:</entry></row>\n";
++#	        $output .= "<varlistentry><term>Parameters:</term><listitem></listitem></varlistentry>\n";
+ 	        $output .= $params_desc;
+ 	    }
+ 
+ 	    # Output the returns info last.
+ 	    if ($returns) {
+-		$output .= "<row><entry align=\"right\"><emphasis>Returns</emphasis> :</entry><entry>$returns</entry></row>\n";
++		$output .= "<varlistentry><term><emphasis>Returns</emphasis> :</term><listitem><para>$returns</para></listitem></varlistentry>\n";
+ 	    }
+ 
+ 	    # Finish the table.
+-	    $output .= "</tbody></tgroup></informaltable>";
++	    $output .= "</variablelist>";
+ 	}
+     }
+     return $output;
+@@ -995,22 +1143,15 @@
+ #		  of synopsis, with '<' '>' around them.
+ #		$synopsis - reference to the DocBook for the Synopsis part.
+ #		$details - reference to the DocBook for the Details part.
++#               $signal_synop - reference to the DocBook for the Signal Synopsis part
++#               $signal_desc - reference to the DocBook for the Signal Description part
++#               $args_synop - reference to the DocBook for the Arg Synopsis part
++#               $args_desc - reference to the DocBook for the Arg Description part
++#               $hierarchy - reference to the DocBook for the Object Hierarchy part
+ #############################################################################
+ 
+ sub OutputSGMLFile {
+-    my ($file, $title, $section_id, $includes, $synopsis, $details) = @_;
+-
+-    # Find out if this is a GtkObject or descendant.
+-    my $signals_synop = "";
+-    my $signals_desc = "";
+-    my $args_synop = "";
+-    my $args_desc = "";
+-    my $hierarchy = "";
+-    if (&CheckIsObject ($title)) {
+-	($signals_synop, $signals_desc) = &GetSignals ($title);
+-	($args_synop, $args_desc) = &GetArgs ($title);
+-	$hierarchy = &GetHierarchy ($title);
+-    }
++    my ($file, $title, $section_id, $includes, $synopsis, $details, $signals_synop, $signals_desc, $args_synop, $args_desc, $hierarchy) = @_;
+ 
+     # The edited title overrides the one from the sections file.
+     my $new_title = $SymbolDocs{"$TMPL_DIR/$file:Title"};
+@@ -1055,8 +1196,8 @@
+ 	$include_output .= "#include &lt;${include}&gt;\n";
+     }
+ 
+-    my $old_sgml_file = "$SGML_OUTPUT_DIR/$file";
+-    my $new_sgml_file = "$SGML_OUTPUT_DIR/$file.new";
++    my $old_sgml_file = "$SGML_OUTPUT_DIR/$file.$OUTPUT_FORMAT";
++    my $new_sgml_file = "$SGML_OUTPUT_DIR/$file.$OUTPUT_FORMAT.new";
+ 
+     open (OUTPUT, ">$new_sgml_file")
+ 	|| die "Can't create $new_sgml_file";
+@@ -1068,6 +1209,10 @@
+     # since it changes every day (and it is only used in the man pages):
+     # "<refentry id="$section_id" revision="$mday $month $year">"
+ 
++    if (lc($OUTPUT_FORMAT) eq "xml") {
++        print OUTPUT $doctype_header;
++    }
++
+     print OUTPUT <<EOF;
+ <refentry id="$section_id">
+ <refmeta>
+@@ -1088,9 +1233,9 @@
+ $${synopsis}</synopsis>
+ </refsynopsisdiv>
+ 
+-$hierarchy
+-$args_synop
+-$signals_synop
++$$hierarchy
++$$args_synop
++$$signals_synop
+ 
+ <refsect1>
+ <title>Description</title>
+@@ -1101,8 +1246,8 @@
+ <title>Details</title>
+ $$details
+ </refsect1>
+-$args_desc
+-$signals_desc
++$$args_desc
++$$signals_desc
+ 
+ $see_also
+ </refentry>
+@@ -1154,15 +1299,25 @@
+       open (OUTPUT, ">$MAIN_SGML_FILE")
+ 	|| die "Can't create $MAIN_SGML_FILE";
+ 
+-      print OUTPUT <<EOF;
+-<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
++      if (lc($OUTPUT_FORMAT) eq "xml") {
++	  print OUTPUT <<EOF;
++<?xml version="1.0"?>
++<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
++               "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
++<book id="index" xmlns:xi="http://www.w3.org/2001/XInclude">
+ EOF
+-
+-      print OUTPUT $book_top;
+-
+-      print OUTPUT <<EOF;
++      } else {
++	print OUTPUT <<EOF;
++<!doctype book PUBLIC "-//DavenPort//DTD DocBook V3.0//EN" [
++EOF
++        print OUTPUT $book_top;
++        print OUTPUT <<EOF;
+ ]>
+ <book id="index">
++EOF
++      }
++
++print OUTPUT <<EOF;
+   <bookinfo>
+     <title>[Insert name here] Reference Manual</title>
+   </bookinfo>
+@@ -1224,6 +1379,30 @@
+     return $text;
+ }
+ 
++#############################################################################
++# Function    : ConvertSGMLChars
++# Description : This turns chars which are used in SGML into entities,
++#		e.g. '<' into '&lt;'. Depending on $SGML_MODE, this is done
++#               unconditionally or only if the character doesn't seem to be 
++#               part of an SGML construct (tag or entity reference)
++# Arguments   : $text - the text to turn into proper SGML.
++#############################################################################
++
++sub ConvertSGMLChars {
++    my ($text) = @_;
++    if ($SGML_MODE) {
++	$text =~ s/&(?![a-zA-Z#])/&amp;/g;	# Do this first, or the others get messed up.
++	$text =~ s/<(?![a-zA-Z\/!])/&lt;/g;
++	$text =~ s/(?<![a-zA-Z0-9"'\/-])>/&gt;/g;
++    }
++    else {
++	$text =~ s/&/&amp;/g;	# Do this first, or the others get messed up.
++	$text =~ s/</&lt;/g;
++	$text =~ s/>/&gt;/g;
++    }
++    return $text;
++}
++
+ 
+ #############################################################################
+ # Function    : ExpandAbbreviations
+@@ -1337,12 +1516,7 @@
+     }
+     $hierarchy .= "</synopsis>\n";
+ 
+-    return <<EOF;
+-<refsect1>
+-<title>Object Hierarchy</title>
+-$hierarchy
+-</refsect1>
+-EOF
++    return $hierarchy;
+ }
+ 
+ 
+@@ -1375,7 +1549,7 @@
+ 		    . (' ' x $SIGNAL_FIELD_WIDTH);
+ 	    }
+ 
+-	    $desc .= "<refsect2><title><anchor id=\"$id\">The &quot;$name&quot; signal</title>\n";
++	    $desc .= "<refsect2><title><anchor id=\"$id\"${empty_element_end}The &quot;$name&quot; signal</title>\n";
+ 	    $desc .= "<programlisting>";
+ 
+ 	    $SignalReturns[$i] =~ m/\s*(const\s*)?(\w+)\s*(\**)/;
+@@ -1421,22 +1595,6 @@
+ 	    $desc .= "</refsect2>";
+ 	}
+     }
+-    if ($synop ne '') {
+-        $synop = <<EOF;
+-<refsect1>
+-<title>Signal Prototypes</title>
+-<synopsis>
+-
+-${synop}</synopsis>
+-</refsect1>
+-EOF
+-	$desc  = <<EOF;
+-<refsect1>
+-<title>Signals</title>
+-$desc
+-</refsect1>
+-EOF
+-    }
+     return ($synop, $desc);
+ }
+ 
+@@ -1452,6 +1610,10 @@
+     my ($object) = @_;
+     my $synop = "";
+     my $desc = "";
++    my $child_synop = "";
++    my $child_desc = "";
++    my $style_synop = "";
++    my $style_desc = "";
+ 
+     my $i;
+     for ($i = 0; $i <= $#ArgObjects; $i++) {
+@@ -1495,45 +1657,29 @@
+ 		if ($flags_string) { $flags_string .= " / "; }
+ 		$flags_string .= "Construct Only";
+ 	    }
+-	    if ($flags =~ m/c/) {
+-		if ($flags_string) { $flags_string .= " / "; }
+-		$flags_string .= "Child";
+-	    }
+ 
++	    my $blurb = &CreateValidSGML ($ArgBlurbs[$i]);
+ 	    my $pad1 = " " x (20 - length ($name));
+ 	    my $pad2 = " " x (20 - length ($type));
+-	    $synop .= "  &quot;<link linkend=\"$id\">$name</link>&quot;$pad1 $type_output$pad2 : $flags_string\n";
+ 
+-	    $desc .= "<varlistentry><term><anchor id=\"$id\">&quot;<literal>$name</literal>&quot; ($type_output : $flags_string)</term>\n<listitem>\n";
++ 	    my $arg_synop = "  &quot;<link linkend=\"$id\">$name</link>&quot;$pad1 $type_output$pad2 : $flags_string\n";
++	    my $arg_desc = "<varlistentry><term><anchor id=\"$id\"${empty_element_end}&quot;<literal>$name</literal>&quot; ($type_output : $flags_string)</term>\n<listitem>\n<para>$blurb</para>\n</listitem></varlistentry>\n";
+ 
+-	    if (defined ($SymbolDocs{$symbol})) {
+-	        $desc .= &ExpandAbbreviations($SymbolDocs{$symbol});
+-	    } else {
+-		$desc .= "<para></para>\n";
++	    if ($flags =~ m/c/) {
++	        $child_synop .= $arg_synop;
++		$child_desc .= $arg_desc;
++	    }
++	    elsif ($flags =~ m/s/) {
++	        $style_synop .= $arg_synop;
++		$style_desc .= $arg_desc;
++	    }
++	    else {
++	        $synop .= $arg_synop;
++		$desc .= $arg_desc;
+ 	    }
+-
+-	    $desc .= "</listitem></varlistentry>\n";
+ 	}
+     }
+-    if ($synop ne '') {
+-        $synop = <<EOF;
+-<refsect1>
+-<title>Properties</title>
+-<synopsis>
+-
+-${synop}</synopsis>
+-</refsect1>
+-EOF
+-	$desc  = <<EOF;
+-<refsect1>
+-<title>Properties</title>
+-<variablelist>
+-$desc
+-</variablelist>
+-</refsect1>
+-EOF
+-    }
+-    return ($synop, $desc);
++    return ($synop, $child_synop, $style_synop, $desc, $child_desc, $style_desc);
+ }
+ 
+ 
+@@ -1604,6 +1750,7 @@
+     my ($in_description, $in_return);
+     my ($description, $return_desc, $return_start);
+     my $current_param;
++    my $ignore_returns;
+     my @params;
+     while (<SRCFILE>) {
+ 	# Look for the start of a comment block.
+@@ -1621,6 +1768,7 @@
+ 		$description = "";
+ 		$return_desc = "";
+ 		$current_param = -1;
++		$ignore_returns = 0;
+ 		@params = ();
+ 	    }
+ 	    next;
+@@ -1640,14 +1788,12 @@
+ 		    push (@params, "Returns");
+ 		    push (@params, $return_desc);
+ 		}
+-                # Convert special SGML characters, unless --sgml-mode is used.
+-                if (!$SGML_MODE) {
+-                    $description = &CreateValidSGML ($description);
+-                    my $k;
+-                    for ($k = 1; $k <= $#params; $k += 2) {
+-                        $params[$k] = &CreateValidSGML ($params[$k]);
+-                    }
+-                }
++                # Convert special SGML characters
++                $description = &ConvertSGMLChars ($description);
++                my $k;
++                for ($k = 1; $k <= $#params; $k += 2) {
++		    $params[$k] = &ConvertSGMLChars ($params[$k]);
++		}
+ 
+ 		$SourceSymbolDocs{$symbol} = $description;
+ 		$SourceSymbolParams{$symbol} = [ @params ];
+@@ -1692,7 +1838,7 @@
+ 	    # Get rid of 'Description:'
+ 	    s%^\s*Description:%%;
+ 
+-	    if (m%^\s*(returns:|return\s+value:|returns\s*)%i) {
++	    if (!$ignore_returns && m%^\s*(returns:|return\s+value:|returns\s*)%i) {
+ #		print "RETURNS: $_";
+ 		$return_start = $1;
+ 		$return_desc = $';
+@@ -1718,6 +1864,9 @@
+ 	    if ($param_name eq "...") {
+ 		$param_name = "Varargs";
+ 	    }
++	    if ("\L$param_name" eq "returns") {
++	      $ignore_returns = 1;
++	    }
+ 	    push (@params, $param_name);
+ 	    push (@params, $');
+ 	    $current_param += 2;
+@@ -1758,16 +1907,12 @@
+ 
+      foreach $symbol (sort (keys (%AllSymbols))) {
+           if (defined ($Declarations{$symbol})) {
+-               my $type = $DeclarationTypes{$symbol};
+-               if (($type eq 'FUNCTION') or ($type eq 'MACRO')) {
+-                    $total++;
+-                    if (exists ($AllDocumentedSymbols{$symbol})) {
+-                         $n_documented++;
+-                    } else {
+-                         $buffer .= $symbol . "\n";
+-                    }
+-               } elsif ($type eq 'STRUCT') {
+-               }
++	       $total++;
++	       if (exists ($AllDocumentedSymbols{$symbol})) {
++		 $n_documented++;
++	       } else {
++		 $buffer .= $symbol . "\n";
++	       }
+           }
+      }
+ 
+@@ -1778,15 +1923,15 @@
+           $percent = ($n_documented / $total) * 100.0;
+      }
+ 
+-     printf UNDOCUMENTED "%.0f%% function docs coverage.\n", $percent;
+-     print UNDOCUMENTED "$n_documented functions documented.\n";
++     printf UNDOCUMENTED "%.0f%% symbol docs coverage.\n", $percent;
++     print UNDOCUMENTED "$n_documented symbols documented.\n";
+      print UNDOCUMENTED ($total - $n_documented) . " not documented.\n\n\n";
+ 
+      print UNDOCUMENTED $buffer;
+ 
+      close (UNDOCUMENTED);
+ 
+-     printf (("%.0f%% function docs coverage ($n_documented functions documented, " . ($total - $n_documented) . " not documented)\nSee $MODULE-undocumented.txt for a list of missing docs.\nThe doc coverage percentage doesn't include intro sections.\n"), $percent);
++     printf (("%.0f%% symbol docs coverage ($n_documented symbols documented, " . ($total - $n_documented) . " not documented)\nSee $MODULE-undocumented.txt for a list of missing docs.\nThe doc coverage percentage doesn't include intro sections.\n"), $percent);
+ }
+ 
+ 
+@@ -2118,9 +2263,10 @@
+ sub ReadTemplateFile {
+     my ($docsfile, $skip_unused_params) = @_;
+ 
+-#    print "Reading $docsfile\n";
+-    if (! -f $docsfile) {
+-	print "File doesn't exist: $docsfile\n";
++    my $template = "$docsfile.sgml";
++#    print "Reading $template\n";
++    if (! -f $template) {
++	print "File doesn't exist: $template\n";
+ 	return; 
+     }
+ 
+@@ -2134,8 +2280,8 @@
+ 				#   of param name & description.
+     my $in_unused_params = 0;	# True if we are reading in the unused params.
+ 
+-    open (DOCS, $docsfile)
+-	|| die "Can't open file $docsfile: $!";
++    open (DOCS, "$template")
++	|| die "Can't open file $template: $!";
+     while (<DOCS>) {
+ 	if (m/^<!-- ##### ([A-Z_]+) (\S+) ##### -->/) {
+ 	    my $type = $1;
+@@ -2247,10 +2393,12 @@
+ 
+     my $old_tree_index = "$SGML_OUTPUT_DIR/tree_index.sgml";
+     my $new_tree_index = "$SGML_OUTPUT_DIR/tree_index.new";
++    my $tree_header = $doctype_header;
++    $tree_header =~ s/<!DOCTYPE \w+/<!DOCTYPE screen/;
+ 
+     open (OUTPUT, ">$new_tree_index")
+ 	|| die "Can't create $new_tree_index";
+-    print (OUTPUT "<literallayout>\n");
++    print (OUTPUT "$tree_header<screen>\n");
+ 
+     while (<INPUT>) {
+         if (m/\S+/) {
+@@ -2264,7 +2412,7 @@
+ 	    push (@ObjectLevels, $level);
+         }
+     }
+-    print (OUTPUT "</literallayout>\n");
++    print (OUTPUT "</screen>\n");
+ 
+     close (INPUT);
+     close (OUTPUT);
+@@ -2279,7 +2427,8 @@
+ # Function    : ReadArgsFile
+ # Description : This reads in an existing file which contains information on
+ #		all GTK args. It creates the arrays @ArgObjects, @ArgNames,
+-#		@ArgTypes and @ArgFlags containing info on the args.
++#		@ArgTypes, @ArgFlags, @ArgNicks and @ArgBlurbs containing info 
++#               on the args.
+ # Arguments   : $file - the file containing the arg information.
+ #############################################################################
+ 
+@@ -2291,12 +2440,16 @@
+     my $arg_name;
+     my $arg_type;
+     my $arg_flags;
++    my $arg_nick;
++    my $arg_blurb;
+ 
+     # Reset the signal info.
+     @ArgObjects = ();
+     @ArgNames = ();
+     @ArgTypes = ();
+     @ArgFlags = ();
++    @ArgNicks = ();
++    @ArgBlurbs = ();
+ 
+     if (! -f $file) {
+ 	return;
+@@ -2313,6 +2466,8 @@
+ 		$arg_name = "";
+ 		$arg_type = "";
+ 		$arg_flags = "";
++		$arg_nick = "";
++		$arg_blurb = "";
+ 	    }
+ 	} else {
+ 	    if (m/^<NAME>(.*)<\/NAME>/) {
+@@ -2328,12 +2483,24 @@
+ 		$arg_type = $1;
+ 	    } elsif (m/^<FLAGS>(.*)<\/FLAGS>/) {
+ 		$arg_flags = $1;
++	    } elsif (m/^<NICK>(.*)<\/NICK>/) {
++		$arg_nick = $1;
++	    } elsif (m/^<BLURB>(.*)<\/BLURB>/) {
++		$arg_blurb = $1;
++		if ($arg_blurb eq "(null)") {
++		  $arg_blurb = "";
++		  print <<EOF;
++WARNING: Property ${arg_object}::${arg_name} has NULL blurb.
++EOF
++		}
+ 	    } elsif (m%^</ARG>%) {
+ #		print "Found end of arg: ${arg_object}::${arg_name}\n${arg_type} : ${arg_flags}\n";
+ 		push (@ArgObjects, $arg_object);
+ 		push (@ArgNames, $arg_name);
+ 		push (@ArgTypes, $arg_type);
+ 		push (@ArgFlags, $arg_flags);
++		push (@ArgNicks, $arg_nick);
++		push (@ArgBlurbs, $arg_blurb);
+ 		$in_arg = 0;
+ 	    }
+ 	}
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtkdoc-mkhtml.in gtk-doc/gtkdoc-mkhtml.in
+--- gtk-doc-0.9/gtkdoc-mkhtml.in	Wed Nov 28 03:53:24 2001
++++ gtk-doc/gtkdoc-mkhtml.in	Sat Aug 10 10:36:46 2002
+@@ -15,16 +15,32 @@
+ fi
+ 
+ module=$1
++document=$2
+ 
+ prefix=@prefix@
+-gtkdocdir=@datadir@/gtk-doc/
++gtkdocdir=@datadir@/gtk-doc
++
++declaration=$gtkdocdir/gtk-doc.dcl
++
++if head -1 $document | grep -q "<?xml"; then
++  is_xml=true
++else
++  is_xml=false
++fi
+ 
+ # Delete the old index.sgml file, if it exists.
+ if test -f index.sgml; then
+       rm -f index.sgml
+ fi
+ 
+-jade -t sgml -w no-idref -d $gtkdocdir/gtk-doc.dsl $gtkdocdir/gtk-doc.dcl $2
+-sed s%href=\"%href=\"$module/% < index.sgml > index.sgml.tmp && mv index.sgml.tmp index.sgml
++if $is_xml; then
++  @XSLTPROC@ --xinclude --stringparam gtkdoc.bookname $module $gtkdocdir/gtk-doc.xsl $document
++else
++  @JADE@ -t sgml -w no-idref -d $gtkdocdir/gtk-doc.dsl \
++      $gtkdocdir/gtk-doc.dcl $document
++
++  sed s%href=\"%href=\"$module/% < index.sgml > index.sgml.tmp && mv index.sgml.tmp index.sgml
++fi
+ 
+ echo "timestamp" > ../html.stamp
++
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/gtkdoc-scangobj.in gtk-doc/gtkdoc-scangobj.in
+--- gtk-doc-0.9/gtkdoc-scangobj.in	Fri Feb  1 23:16:16 2002
++++ gtk-doc/gtkdoc-scangobj.in	Thu Aug  8 00:13:12 2002
+@@ -68,7 +68,7 @@
+ open OUTPUT, ">$MODULE-scan.c" || die "Cannot open $MODULE-scan.c: $!\n";
+ 
+ my $old_signals_filename = "$OUTPUT_DIR/$MODULE.signals";
+-my $new_signals_filename = "$OUTPUT_DIR/MODULE.signals.new";
++my $new_signals_filename = "$OUTPUT_DIR/$MODULE.signals.new";
+ my $old_hierarchy_filename = "$OUTPUT_DIR/$MODULE.hierarchy";
+ my $new_hierarchy_filename = "$OUTPUT_DIR/$MODULE.hierarchy.new";
+ my $old_args_filename = "$OUTPUT_DIR/$MODULE.args";
+@@ -100,6 +100,9 @@
+ #include <stdio.h>
+ 
+ $includes
++#ifdef GTK_IS_WIDGET_CLASS
++#include <gtk/gtkversion.h>
++#endif
+ GType object_types[$ntypes];
+ 
+ GType *
+@@ -119,6 +122,7 @@
+      * their signals and properties.
+      */
+     for (i=0; object_types[i]; i++)
++      if (G_TYPE_IS_CLASSED (object_types[i]))
+       g_type_class_ref (object_types[i]);
+ 
+     return object_types;
+@@ -207,17 +211,22 @@
+   guint *signals, n_signals;
+   guint sig;
+ 
+-  object_class_name = g_type_name (object_type);
++  if (G_TYPE_IS_INSTANTIATABLE (object_type) ||
++      G_TYPE_IS_INTERFACE (object_type))
++    {
+ 
+-  signals = g_signal_list_ids (object_type, &n_signals);
+-  qsort (signals, n_signals, sizeof (guint), compare_signals);  	
++      object_class_name = g_type_name (object_type);
+ 
+-  for (sig = 0; sig < n_signals; sig++)
+-    {
+-      output_widget_signal (fp, object_type, object_class_name,
+-			    signals[sig]);
+-    }
+-  g_free (signals);
++      signals = g_signal_list_ids (object_type, &n_signals);
++      qsort (signals, n_signals, sizeof (guint), compare_signals);
++
++      for (sig = 0; sig < n_signals; sig++)
++        {
++           output_widget_signal (fp, object_type, object_class_name,
++     		                 signals[sig]);
++        }
++      g_free (signals);
++   }
+ }
+ 
+ 
+@@ -735,7 +744,6 @@
+   fclose (fp);
+ }
+ 
+-
+ static void
+ output_widget_args (FILE *fp, GType object_type)
+ {
+@@ -745,6 +753,11 @@
+   gchar flags[16], *pos;
+   GParamSpec **properties;
+   guint n_properties;
++  gboolean child_prop;
++  gboolean style_prop;
++
++  if (!G_TYPE_IS_CLASSED (object_type))
++    return;
+ 
+   class = g_type_class_peek (object_type);
+   if (!class)
+@@ -753,31 +766,70 @@
+   object_class_name = g_type_name (object_type);
+ 
+   properties = g_object_class_list_properties (class, &n_properties);
++  child_prop = FALSE;
++  style_prop = FALSE;
+ 
+-  for (arg = 0; arg < n_properties; arg++)
+-    {
+-      GParamSpec *spec = properties[arg];
+-
+-      if (spec->owner_type != object_type)
+-        continue;        
+-
+-      pos = flags;
+-      /* We use one-character flags for simplicity. */
+-      if (spec->flags & G_PARAM_READABLE)
+-	*pos++ = 'r';
+-      if (spec->flags & G_PARAM_WRITABLE)
+-	*pos++ = 'w';
+-      if (spec->flags & G_PARAM_CONSTRUCT)
+-	*pos++ = 'x';
+-      if (spec->flags & G_PARAM_CONSTRUCT_ONLY)
+-	*pos++ = 'X';
+-      *pos = 0;
++  while (TRUE) {
++    for (arg = 0; arg < n_properties; arg++)
++      {
++        GParamSpec *spec = properties[arg];
++        const gchar *nick, *blurb, *dot;
++
++        if (spec->owner_type != object_type)
++          continue;
++
++        pos = flags;
++        /* We use one-character flags for simplicity. */
++        if (child_prop && !style_prop)
++   	  *pos++ = 'c';
++        if (style_prop)
++   	  *pos++ = 's';
++        if (spec->flags & G_PARAM_READABLE)
++ 	  *pos++ = 'r';
++        if (spec->flags & G_PARAM_WRITABLE)
++	  *pos++ = 'w';
++        if (spec->flags & G_PARAM_CONSTRUCT)
++	  *pos++ = 'x';
++        if (spec->flags & G_PARAM_CONSTRUCT_ONLY)
++	  *pos++ = 'X';
++        *pos = 0;
++
++        nick = g_param_spec_get_nick (spec);
++        blurb = g_param_spec_get_blurb (spec);
++
++        dot = "";
++        if (blurb) {
++          int str_len = strlen (blurb);
++          if (str_len > 0  && blurb[str_len - 1] != '.')
++            dot = ".";
++        }
++
++        fprintf (fp, "<ARG>\\n<NAME>%s::%s</NAME>\\n<TYPE>%s</TYPE>\\n<FLAGS>%s</FLAGS>\\n<NICK>%s</NICK>\\n<BLURB>%s%s</BLURB>\\n</ARG>\\n\\n",
++	         object_class_name, g_param_spec_get_name (spec), g_type_name (spec->value_type), flags, nick ? nick : "(null)", blurb ? blurb : "(null)", dot);
++      }
++
++    g_free (properties);
++
++#ifdef GTK_IS_CONTAINER_CLASS
++    if (!child_prop && GTK_IS_CONTAINER_CLASS (class)) {
++      properties = gtk_container_class_list_child_properties (class, &n_properties);
++      child_prop = TRUE;
++      continue;
++    }
++#endif
+ 
+-      fprintf (fp, "<ARG>\\n<NAME>%s::%s</NAME>\\n<TYPE>%s</TYPE>\\n<FLAGS>%s</FLAGS>\\n</ARG>\\n\\n",
+-	       object_class_name, spec->name, g_type_name (spec->value_type), flags);
++#ifdef GTK_IS_WIDGET_CLASS
++#if GTK_CHECK_VERSION(2,1,0)
++    if (!style_prop && GTK_IS_WIDGET_CLASS (class)) {
++      properties = gtk_widget_class_list_style_properties (GTK_WIDGET_CLASS (class), &n_properties);
++      style_prop = TRUE;
++      continue;
+     }
++#endif
++#endif
+ 
+-  g_free (properties);
++    break;
++  }
+ }
+ EOT
+ 
+@@ -803,9 +855,10 @@
+ 
+ system("./$MODULE-scan") == 0 or die "Scan failed\n";
+ 
+-unlink "./$MODULE-scan.c", "./$MODULE-scan", 
+-
++unlink "./$MODULE-scan.c", "./$o_file", "./$MODULE-scan";
+ 
+ &UpdateFileIfChanged ($old_signals_filename, $new_signals_filename, 0);
+ &UpdateFileIfChanged ($old_hierarchy_filename, $new_hierarchy_filename, 0);
+ &UpdateFileIfChanged ($old_args_filename, $new_args_filename, 0);
++
++
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/help/manual/C/ChangeLog gtk-doc/help/manual/C/ChangeLog
+--- gtk-doc-0.9/help/manual/C/ChangeLog	Thu Jan  1 01:00:00 1970
++++ gtk-doc/help/manual/C/ChangeLog	Mon Nov 27 06:27:46 2000
+@@ -0,0 +1,14 @@
++2000-11-26	Dan Mueth <d-mueth@uchicago.edu>
++
++	* gtk-doc-manual.sgml: Committing changes made by
++	Chris Lyttle <chris@wilddev.net>.  (Text for Chapter 1)
++
++2000-11-25	Dan Mueth <d-mueth@uchicago.edu>
++
++	* gtk-doc-manual.sgml: Put part of the outline into SGML.
++	  Chris plans to put rest of outline in here and start
++	  writing.
++	* fdl-appendix.sgml: The FDL in SGML.  We will probably post
++	  these on the web as a single document (book) so we will
++	  need the FDL to be included as an appendix.
++
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/help/manual/C/fdl-appendix.sgml gtk-doc/help/manual/C/fdl-appendix.sgml
+--- gtk-doc-0.9/help/manual/C/fdl-appendix.sgml	Thu Jan  1 01:00:00 1970
++++ gtk-doc/help/manual/C/fdl-appendix.sgml	Sat Nov 25 23:41:56 2000
+@@ -0,0 +1,671 @@
++<!--  
++     The GNU Free Documentation License 1.1 in DocBook
++     Markup by Eric Baudais <baudais@okstate.edu>
++     Maintained by the GNOME Documentation Project
++     http://developer.gnome.org/projects/gdp
++     Version: 1.0.1
++     Last Modified: Nov 16, 2000
++-->
++
++<appendix id="fdl">
++  <docinfo>
++    <releaseinfo>
++      Version 1.1, March 2000
++    </releaseinfo>
++    <copyright>
++      <year>2000</year><holder>Free Software Foundation, Inc.</holder>
++    </copyright>
++    <legalnotice id="fdl-legalnotice">
++      <para>
++	<address>Free Software Foundation, Inc. <street>59 Temple Place, 
++        Suite 330</street>, <city>Boston</city>, <state>MA</state>  
++        <postcode>02111-1307</postcode>  <country>USA</country></address> 
++	Everyone is permitted to copy and distribute verbatim copies of this 
++        license document, but changing it is not allowed.
++      </para>
++    </legalnotice>
++  </docinfo>
++  <title>GNU Free Documentation License</title>
++
++  <sect1 id="fdl-preamble">
++    <title>0. PREAMBLE</title>
++    <para>
++      The purpose of this License is to make a manual, textbook, or
++      other written document <quote>free</quote> in the sense of
++      freedom: to assure everyone the effective freedom to copy and
++      redistribute it, with or without modifying it, either
++      commercially or noncommercially. Secondarily, this License
++      preserves for the author and publisher a way to get credit for
++      their work, while not being considered responsible for
++      modifications made by others.
++    </para>
++    
++    <para>
++      This License is a kind of <quote>copyleft</quote>, which means
++      that derivative works of the document must themselves be free in
++      the same sense. It complements the GNU General Public License,
++      which is a copyleft license designed for free software.
++    </para>
++    
++    <para>
++      We have designed this License in order to use it for manuals for
++      free software, because free software needs free documentation: a
++      free program should come with manuals providing the same
++      freedoms that the software does. But this License is not limited
++      to software manuals; it can be used for any textual work,
++      regardless of subject matter or whether it is published as a
++      printed book. We recommend this License principally for works
++      whose purpose is instruction or reference.
++    </para>
++  </sect1>
++  <sect1 id="fdl-section1">
++    <title>1. APPLICABILITY AND DEFINITIONS</title>
++    <para id="fdl-document">
++      This License applies to any manual or other work that contains a
++      notice placed by the copyright holder saying it can be
++      distributed under the terms of this License. The
++      <quote>Document</quote>, below, refers to any such manual or
++      work. Any member of the public is a licensee, and is addressed
++      as <quote>you</quote>.
++    </para>
++    
++    <para id="fdl-modified">
++      A <quote>Modified Version</quote> of the Document means any work
++      containing the Document or a portion of it, either copied
++      verbatim, or with modifications and/or translated into another
++      language.
++    </para>
++	
++    <para id="fdl-secondary">
++      A <quote>Secondary Section</quote> is a named appendix or a
++      front-matter section of the <link
++      linkend="fdl-document">Document</link> that deals exclusively
++      with the relationship of the publishers or authors of the
++      Document to the Document's overall subject (or to related
++      matters) and contains nothing that could fall directly within
++      that overall subject. (For example, if the Document is in part a
++      textbook of mathematics, a Secondary Section may not explain any
++      mathematics.)  The relationship could be a matter of historical
++      connection with the subject or with related matters, or of
++      legal, commercial, philosophical, ethical or political position
++      regarding them.
++    </para>
++
++    <para id="fdl-invariant">
++      The <quote>Invariant Sections</quote> are certain <link
++      linkend="fdl-secondary"> Secondary Sections</link> whose titles
++      are designated, as being those of Invariant Sections, in the
++      notice that says that the <link
++      linkend="fdl-document">Document</link> is released under this
++      License.
++    </para>
++    
++    <para id="fdl-cover-texts">
++      The <quote>Cover Texts</quote> are certain short passages of
++      text that are listed, as Front-Cover Texts or Back-Cover Texts,
++      in the notice that says that the <link
++      linkend="fdl-document">Document</link> is released under this
++      License.
++    </para>
++	
++    <para id="fdl-transparent">
++      A <quote>Transparent</quote> copy of the <link
++      linkend="fdl-document"> Document</link> means a machine-readable
++      copy, represented in a format whose specification is available
++      to the general public, whose contents can be viewed and edited
++      directly and straightforwardly with generic text editors or (for
++      images composed of pixels) generic paint programs or (for
++      drawings) some widely available drawing editor, and that is
++      suitable for input to text formatters or for automatic
++      translation to a variety of formats suitable for input to text
++      formatters. A copy made in an otherwise Transparent file format
++      whose markup has been designed to thwart or discourage
++      subsequent modification by readers is not Transparent.  A copy
++      that is not <quote>Transparent</quote> is called
++      <quote>Opaque</quote>.
++    </para>
++    
++    <para>
++      Examples of suitable formats for Transparent copies include
++      plain ASCII without markup, Texinfo input format, LaTeX input
++      format, SGML or XML using a publicly available DTD, and
++      standard-conforming simple HTML designed for human
++      modification. Opaque formats include PostScript, PDF,
++      proprietary formats that can be read and edited only by
++      proprietary word processors, SGML or XML for which the DTD
++      and/or processing tools are not generally available, and the
++      machine-generated HTML produced by some word processors for
++      output purposes only.
++    </para>
++    
++    <para id="fdl-title-page">
++      The <quote>Title Page</quote> means, for a printed book, the
++      title page itself, plus such following pages as are needed to
++      hold, legibly, the material this License requires to appear in
++      the title page. For works in formats which do not have any title
++      page as such, <quote>Title Page</quote> means the text near the
++      most prominent appearance of the work's title, preceding the
++      beginning of the body of the text.
++    </para>
++  </sect1>
++    
++  <sect1 id="fdl-section2">
++    <title>2. VERBATIM COPYING</title>
++    <para>
++      You may copy and distribute the <link
++      linkend="fdl-document">Document</link> in any medium, either
++      commercially or noncommercially, provided that this License, the
++      copyright notices, and the license notice saying this License
++      applies to the Document are reproduced in all copies, and that
++      you add no other conditions whatsoever to those of this
++      License. You may not use technical measures to obstruct or
++      control the reading or further copying of the copies you make or
++      distribute. However, you may accept compensation in exchange for
++      copies. If you distribute a large enough number of copies you
++      must also follow the conditions in <link
++      linkend="fdl-section3">section 3</link>.
++    </para>
++    
++    <para>
++      You may also lend copies, under the same conditions stated
++      above, and you may publicly display copies.
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section3">
++    <title>3. COPYING IN QUANTITY</title>
++    <para>
++      If you publish printed copies of the <link
++      linkend="fdl-document">Document</link> numbering more than 100,
++      and the Document's license notice requires <link
++      linkend="fdl-cover-texts">Cover Texts</link>, you must enclose
++      the copies in covers that carry, clearly and legibly, all these
++      Cover Texts: Front-Cover Texts on the front cover, and
++      Back-Cover Texts on the back cover. Both covers must also
++      clearly and legibly identify you as the publisher of these
++      copies. The front cover must present the full title with all
++      words of the title equally prominent and visible. You may add
++      other material on the covers in addition. Copying with changes
++      limited to the covers, as long as they preserve the title of the
++      <link linkend="fdl-document">Document</link> and satisfy these
++      conditions, can be treated as verbatim copying in other
++      respects.
++    </para>
++    
++    <para>
++      If the required texts for either cover are too voluminous to fit
++      legibly, you should put the first ones listed (as many as fit
++      reasonably) on the actual cover, and continue the rest onto
++      adjacent pages.
++    </para>
++    
++    <para>
++      If you publish or distribute <link
++      linkend="fdl-transparent">Opaque</link> copies of the <link
++      linkend="fdl-document">Document</link> numbering more than 100,
++      you must either include a machine-readable <link
++      linkend="fdl-transparent">Transparent</link> copy along with
++      each Opaque copy, or state in or with each Opaque copy a
++      publicly-accessible computer-network location containing a
++      complete Transparent copy of the Document, free of added
++      material, which the general network-using public has access to
++      download anonymously at no charge using public-standard network
++      protocols. If you use the latter option, you must take
++      reasonably prudent steps, when you begin distribution of Opaque
++      copies in quantity, to ensure that this Transparent copy will
++      remain thus accessible at the stated location until at least one
++      year after the last time you distribute an Opaque copy (directly
++      or through your agents or retailers) of that edition to the
++      public.
++    </para>
++    
++    <para>
++      It is requested, but not required, that you contact the authors
++      of the <link linkend="fdl-document">Document</link> well before
++      redistributing any large number of copies, to give them a chance
++      to provide you with an updated version of the Document.
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section4">
++    <title>4. MODIFICATIONS</title>
++    <para>
++      You may copy and distribute a <link
++      linkend="fdl-modified">Modified Version</link> of the <link
++      linkend="fdl-document">Document</link> under the conditions of
++      sections <link linkend="fdl-section2">2</link> and <link
++      linkend="fdl-section3">3</link> above, provided that you release
++      the Modified Version under precisely this License, with the
++      Modified Version filling the role of the Document, thus
++      licensing distribution and modification of the Modified Version
++      to whoever possesses a copy of it. In addition, you must do
++      these things in the Modified Version:
++    </para>
++    
++    <itemizedlist mark="opencircle">
++      <listitem>
++	<formalpara>
++	  <title>A</title>
++	  <para>
++	    Use in the <link linkend="fdl-title-page">Title
++	    Page</link> (and on the covers, if any) a title distinct
++	    from that of the <link
++	    linkend="fdl-document">Document</link>, and from those of
++	    previous versions (which should, if there were any, be
++	    listed in the History section of the Document). You may
++	    use the same title as a previous version if the original
++	    publisher of that version gives permission.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>B</title>
++	  <para>
++	    List on the <link linkend="fdl-title-page">Title
++	    Page</link>, as authors, one or more persons or entities
++	    responsible for authorship of the modifications in the
++	    <link linkend="fdl-modified">Modified Version</link>,
++	    together with at least five of the principal authors of
++	    the <link linkend="fdl-document">Document</link> (all of
++	    its principal authors, if it has less than five).
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>C</title>
++	  <para>
++	    State on the <link linkend="fdl-title-page">Title
++	    Page</link> the name of the publisher of the <link
++	    linkend="fdl-modified">Modified Version</link>, as the
++	    publisher.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>D</title>
++	  <para>
++	    Preserve all the copyright notices of the <link
++	    linkend="fdl-document">Document</link>.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>E</title>
++	  <para>
++	    Add an appropriate copyright notice for your modifications
++	    adjacent to the other copyright notices.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>F</title>
++	  <para>
++	    Include, immediately after the copyright notices, a
++	    license notice giving the public permission to use the
++	    <link linkend="fdl-modified">Modified Version</link> under
++	    the terms of this License, in the form shown in the
++	    Addendum below.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>G</title>
++	  <para>
++	    Preserve in that license notice the full lists of <link
++	    linkend="fdl-invariant"> Invariant Sections</link> and
++	    required <link linkend="fdl-cover-texts">Cover
++	    Texts</link> given in the <link
++	    linkend="fdl-document">Document's</link> license notice.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>H</title>
++	  <para>
++	    Include an unaltered copy of this License.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>I</title>
++	  <para>
++	    Preserve the section entitled <quote>History</quote>, and
++	    its title, and add to it an item stating at least the
++	    title, year, new authors, and publisher of the <link
++	    linkend="fdl-modified">Modified Version </link>as given on
++	    the <link linkend="fdl-title-page">Title Page</link>.  If
++	    there is no section entitled <quote>History</quote> in the
++	    <link linkend="fdl-document">Document</link>, create one
++	    stating the title, year, authors, and publisher of the
++	    Document as given on its Title Page, then add an item
++	    describing the Modified Version as stated in the previous
++	    sentence.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>J</title>
++	  <para>
++	    Preserve the network location, if any, given in the <link
++	    linkend="fdl-document">Document</link> for public access
++	    to a <link linkend="fdl-transparent">Transparent</link>
++	    copy of the Document, and likewise the network locations
++	    given in the Document for previous versions it was based
++	    on. These may be placed in the <quote>History</quote>
++	    section.  You may omit a network location for a work that
++	    was published at least four years before the Document
++	    itself, or if the original publisher of the version it
++	    refers to gives permission.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>K</title>
++	  <para>
++	    In any section entitled <quote>Acknowledgements</quote> or
++	    <quote>Dedications</quote>, preserve the section's title,
++	    and preserve in the section all the substance and tone of
++	    each of the contributor acknowledgements and/or
++	    dedications given therein.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>L</title>
++	  <para>
++	    Preserve all the <link linkend="fdl-invariant">Invariant
++	    Sections</link> of the <link
++	    linkend="fdl-document">Document</link>, unaltered in their
++	    text and in their titles.  Section numbers or the
++	    equivalent are not considered part of the section titles.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>M</title>
++	  <para>
++	    Delete any section entitled
++	    <quote>Endorsements</quote>. Such a section may not be
++	    included in the <link linkend="fdl-modified">Modified
++	    Version</link>.
++	  </para>
++	</formalpara>
++      </listitem>
++      
++      <listitem>
++	<formalpara>
++	  <title>N</title>
++	  <para>
++	    Do not retitle any existing section as
++	    <quote>Endorsements</quote> or to conflict in title with
++	    any <link linkend="fdl-invariant">Invariant
++	    Section</link>.
++	  </para>
++	</formalpara>
++      </listitem>
++    </itemizedlist>
++    
++    <para>
++      If the <link linkend="fdl-modified">Modified Version</link>
++      includes new front-matter sections or appendices that qualify as
++      <link linkend="fdl-secondary">Secondary Sections</link> and
++      contain no material copied from the Document, you may at your
++      option designate some or all of these sections as invariant. To
++      do this, add their titles to the list of <link
++      linkend="fdl-invariant">Invariant Sections</link> in the
++      Modified Version's license notice.  These titles must be
++      distinct from any other section titles.
++    </para>
++    
++    <para>
++      You may add a section entitled <quote>Endorsements</quote>,
++      provided it contains nothing but endorsements of your <link
++      linkend="fdl-modified">Modified Version</link> by various
++      parties--for example, statements of peer review or that the text
++      has been approved by an organization as the authoritative
++      definition of a standard.
++    </para>
++    
++    <para>
++      You may add a passage of up to five words as a <link
++      linkend="fdl-cover-texts">Front-Cover Text</link>, and a passage
++      of up to 25 words as a <link
++      linkend="fdl-cover-texts">Back-Cover Text</link>, to the end of
++      the list of <link linkend="fdl-cover-texts">Cover Texts</link>
++      in the <link linkend="fdl-modified">Modified Version</link>.
++      Only one passage of Front-Cover Text and one of Back-Cover Text
++      may be added by (or through arrangements made by) any one
++      entity. If the <link linkend="fdl-document">Document</link>
++      already includes a cover text for the same cover, previously
++      added by you or by arrangement made by the same entity you are
++      acting on behalf of, you may not add another; but you may
++      replace the old one, on explicit permission from the previous
++      publisher that added the old one.
++    </para>
++    
++    <para>
++      The author(s) and publisher(s) of the <link
++      linkend="fdl-document">Document</link> do not by this License
++      give permission to use their names for publicity for or to
++      assert or imply endorsement of any <link
++      linkend="fdl-modified">Modified Version </link>.
++    </para>
++  </sect1>
++    
++  <sect1 id="fdl-section5">
++    <title>5. COMBINING DOCUMENTS</title>
++    <para>
++      You may combine the <link linkend="fdl-document">Document</link>
++      with other documents released under this License, under the
++      terms defined in <link linkend="fdl-section4">section 4</link>
++      above for modified versions, provided that you include in the
++      combination all of the <link linkend="fdl-invariant">Invariant
++      Sections</link> of all of the original documents, unmodified,
++      and list them all as Invariant Sections of your combined work in
++      its license notice.
++    </para>
++    
++    <para>
++      The combined work need only contain one copy of this License,
++      and multiple identical <link linkend="fdl-invariant">Invariant
++      Sections</link> may be replaced with a single copy. If there are
++      multiple Invariant Sections with the same name but different
++      contents, make the title of each such section unique by adding
++      at the end of it, in parentheses, the name of the original
++      author or publisher of that section if known, or else a unique
++      number. Make the same adjustment to the section titles in the
++      list of Invariant Sections in the license notice of the combined
++      work.
++    </para>
++    
++    <para>
++      In the combination, you must combine any sections entitled
++      <quote>History</quote> in the various original documents,
++      forming one section entitled <quote>History</quote>; likewise
++      combine any sections entitled <quote>Acknowledgements</quote>,
++      and any sections entitled <quote>Dedications</quote>.  You must
++      delete all sections entitled <quote>Endorsements.</quote>
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section6">
++    <title>6. COLLECTIONS OF DOCUMENTS</title>
++    <para>
++      You may make a collection consisting of the <link
++      linkend="fdl-document">Document</link> and other documents
++      released under this License, and replace the individual copies
++      of this License in the various documents with a single copy that
++      is included in the collection, provided that you follow the
++      rules of this License for verbatim copying of each of the
++      documents in all other respects.
++    </para>
++    
++    <para>
++      You may extract a single document from such a collection, and
++      dispbibute it individually under this License, provided you
++      insert a copy of this License into the extracted document, and
++      follow this License in all other respects regarding verbatim
++      copying of that document.
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section7">
++    <title>7. AGGREGATION WITH INDEPENDENT WORKS</title>
++    <para>
++      A compilation of the <link
++      linkend="fdl-document">Document</link> or its derivatives with
++      other separate and independent documents or works, in or on a
++      volume of a storage or distribution medium, does not as a whole
++      count as a <link linkend="fdl-modified">Modified Version</link>
++      of the Document, provided no compilation copyright is claimed
++      for the compilation.  Such a compilation is called an
++      <quote>aggregate</quote>, and this License does not apply to the
++      other self-contained works thus compiled with the Document , on
++      account of their being thus compiled, if they are not themselves
++      derivative works of the Document.  If the <link
++      linkend="fdl-cover-texts">Cover Text</link> requirement of <link
++      linkend="fdl-section3">section 3</link> is applicable to these
++      copies of the Document, then if the Document is less than one
++      quarter of the entire aggregate, the Document's Cover Texts may
++      be placed on covers that surround only the Document within the
++      aggregate. Otherwise they must appear on covers around the whole
++      aggregate.
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section8">
++    <title>8. TRANSLATION</title>
++    <para>
++      Translation is considered a kind of modification, so you may
++      distribute translations of the <link
++      linkend="fdl-document">Document</link> under the terms of <link
++      linkend="fdl-section4">section 4</link>. Replacing <link
++      linkend="fdl-invariant"> Invariant Sections</link> with
++      translations requires special permission from their copyright
++      holders, but you may include translations of some or all
++      Invariant Sections in addition to the original versions of these
++      Invariant Sections. You may include a translation of this
++      License provided that you also include the original English
++      version of this License. In case of a disagreement between the
++      translation and the original English version of this License,
++      the original English version will prevail.
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section9">
++    <title>9. TERMINATION</title>
++    <para>
++      You may not copy, modify, sublicense, or distribute the <link
++      linkend="fdl-document">Document</link> except as expressly
++      provided for under this License. Any other attempt to copy,
++      modify, sublicense or distribute the Document is void, and will
++      automatically terminate your rights under this License. However,
++      parties who have received copies, or rights, from you under this
++      License will not have their licenses terminated so long as such
++      parties remain in full compliance.
++    </para>
++    </sect1>
++    
++  <sect1 id="fdl-section10">
++    <title>10. FUTURE REVISIONS OF THIS LICENSE</title>
++    <para>
++      The <ulink type="http"
++      url="http://www.gnu.org/fsf/fsf.html">Free Software
++      Foundation</ulink> may publish new, revised versions of the GNU
++      Free Documentation License from time to time. Such new versions
++      will be similar in spirit to the present version, but may differ
++      in detail to address new problems or concerns. See <ulink
++      type="http"
++      url="http://www.gnu.org/copyleft">http://www.gnu.org/copyleft/</ulink>.
++    </para>
++    
++    <para>
++      Each version of the License is given a distinguishing version
++      number. If the <link linkend="fdl-document">Document</link>
++      specifies that a particular numbered version of this License
++      <quote>or any later version</quote> applies to it, you have the
++      option of following the terms and conditions either of that
++      specified version or of any later version that has been
++      published (not as a draft) by the Free Software Foundation. If
++      the Document does not specify a version number of this License,
++      you may choose any version ever published (not as a draft) by
++      the Free Software Foundation.
++    </para>
++  </sect1>
++
++  <sect1 id="fdl-using">
++    <title>Addendum</title>
++    <para>
++      To use this License in a document you have written, include a copy of
++      the License in the document and put the following copyright and
++      license notices just after the title page:
++    </para>
++    
++    <blockquote>
++      <para>
++	Copyright &copy; YEAR YOUR NAME.
++      </para>
++      <para>
++	Permission is granted to copy, distribute and/or modify this
++	document under the terms of the GNU Free Documentation
++	License, Version 1.1 or any later version published by the
++	Free Software Foundation; with the <link
++	linkend="fdl-invariant">Invariant Sections</link> being LIST
++	THEIR TITLES, with the <link
++	linkend="fdl-cover-texts">Front-Cover Texts</link> being LIST,
++	and with the <link linkend="fdl-cover-texts">Back-Cover
++	Texts</link> being LIST.  A copy of the license is included in
++	the section entitled <quote>GNU Free Documentation
++	License</quote>.
++      </para>
++    </blockquote>
++      
++    <para>
++      If you have no <link linkend="fdl-invariant">Invariant
++      Sections</link>, write <quote>with no Invariant Sections</quote>
++      instead of saying which ones are invariant.  If you have no
++      <link linkend="fdl-cover-texts">Front-Cover Texts</link>, write
++      <quote>no Front-Cover Texts</quote> instead of
++      <quote>Front-Cover Texts being LIST</quote>; likewise for <link
++      linkend="fdl-cover-texts">Back-Cover Texts</link>.
++    </para>
++    
++    <para>
++      If your document contains nontrivial examples of program code,
++      we recommend releasing these examples in parallel under your
++      choice of free software license, such as the <ulink type="http"
++      url="http://www.gnu.org/copyleft/gpl.html"> GNU General Public
++      License</ulink>, to permit their use in free software.
++    </para>
++  </sect1>
++</appendix>  
++
++
++
++
++
++
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/help/manual/C/gtk-doc-manual.sgml gtk-doc/help/manual/C/gtk-doc-manual.sgml
+--- gtk-doc-0.9/help/manual/C/gtk-doc-manual.sgml	Thu Jan  1 01:00:00 1970
++++ gtk-doc/help/manual/C/gtk-doc-manual.sgml	Mon Nov 27 06:27:46 2000
+@@ -0,0 +1,288 @@
++<!DOCTYPE book PUBLIC "-//GNOME//DTD DocBook PNG Variant V1.1//EN"[
++<!ENTITY FDL SYSTEM "fdl-appendix.sgml">
++]>
++
++<!-- =============Document Header ============================= -->
++<book id="index">
++ <bookinfo>
++  <title>GTK-Doc Manual</title>
++  <edition>0.0</edition>
++  <authorgroup>
++   <author>
++    <firstname>Chris</firstname>
++    <surname>Lyttle</surname>
++    <affiliation>
++     <address>
++      <email>chris@wilddev.net</email>
++     </address>
++    </affiliation>
++   </author>
++   <author>
++    <firstname>Dan</firstname>
++    <surname>Mueth</surname>
++    <affiliation>
++     <address>
++      <email>d-mueth@uchicago.edu</email>
++     </address>
++    </affiliation>
++   </author>
++  </authorgroup>
++  <copyright>
++   <year>2000</year>
++   <holder>Dan Mueth and Chris Lyttle</holder>
++  </copyright>
++
++  <!-- translators: uncomment this:
++  <copyright>
++   <year>2000</year>
++   <holder>ME-THE-TRANSLATOR (Latin translation)</holder>
++  </copyright>
++   -->
++
++  <legalnotice>
++   <para>
++    Permission is granted to copy, distribute and/or modify this
++    document under the terms of the <citetitle>GNU Free Documentation
++    License</citetitle>, Version 1.1 or any later version published    by the Free Software Foundation with no Invariant Sections, no
++    Front-Cover Texts, and no Back-Cover Texts. A copy of the license
++    is included in <xref linkend="fdl">.
++   </para>
++   <para>
++    Many of the names used by companies to distinguish their products and
++    services are claimed as trademarks. Where those names appear in any
++    GNOME documentation, and those trademarks are made aware to the members
++    of the GNOME Documentation Project, the names have been printed in caps
++    or initial caps.
++   </para>
++  </legalnotice>
++
++ </bookinfo>
++
++ <!-- ======== Chapter 1: Introduction ======================== -->
++
++ <chapter id="introduction">
++  <title>Introduction</title>
++
++  <para>
++	This chapter introduces GTK-Doc and gives an overview of what it is and how it is used.
++  </para>
++
++  <sect1 id="whatisgtkdoc">
++   <title>What is GTK-Doc?</title>
++
++   <para>
++   GTK-Doc is used to document C code. It is typically used to document the public
++   API of libraries, such as the GTK+ and Gnome libraries. But it can also be
++   used to document application code.
++  </para>
++
++
++
++  </sect1>
++
++  <sect1 id="howdoesgtkdocwork">
++   <title>How Does GTK-Doc Work?</title>
++
++       <para>
++GTK-Doc works by using documentation of functions placed inside the source files in
++specially-formatted comment blocks, or documentation added to the template files
++which GTK-Doc uses (though note that GTK-Doc will only document functions that
++are declared in header files; it won't produce output for static functions).
++Currently GTK-Doc does not support placing documentation of other types of
++declarations, such as enums, macros, and structs, inside the source code.
++  </para>
++
++   <para>
++GTK-Doc consists of a number of perl scripts, each performing a different step
++in the process.
++  </para>
++
++  <para>
++There are 5 main steps in the process:
++  </para>
++
++<orderedlist>
++
++  <listitem>
++    <para>
++<guilabel>Gathering information about the code.</guilabel>
++
++   gtkdoc-scan scans the header files of the code looking for declarations of
++   functions, macros, enums, structs, and unions. It creates a list of the
++   declarations, placing them into sections according to which header file they
++   are in. The author can rearrange the sections, and the order of the
++   declarations within them, to produce the final desired order.
++
++   gtkdoc-scanobj can also be used to dynamically query a library about
++   any GtkObject subclasses it exports. It saves information about each
++   object's position in the class hierarchy and about any GTK Args and Signals it
++   provides.
++  </para>
++  </listitem>
++
++  <listitem>
++    <para>
++<guilabel>Generating the "template" files.</guilabel>
++
++   gtkdoc-mktmpl creates a number of files in the tmpl/ subdirectory, using the
++   information gathered in the first step. (Note that this can be run
++   repeatedly. It will try to ensure that no documentation is ever lost.)
++  </para>
++  </listitem>
++
++  <listitem>
++    <para>
++<guilabel>Writing the documentation.</guilabel>
++
++   The author fills in the template files with the documentation for each
++function, macro, union etc.
++  </para>
++  </listitem>
++
++  <listitem>
++    <para>
++<guilabel>Generating the SGML and HTML.</guilabel>
++
++   gtkdoc-mkdb turns the template files into SGML files in the sgml/
++   subdirectory.(If the source code contains documentation on functions, using the special
++   comment blocks, it gets merged in here.)
++
++   gtkdoc-mkhtml turns the SGML files into HTML files in the html/
++   subdirectory.
++  </para>
++  </listitem>
++
++  <listitem>
++    <para>
++<guilabel>Fixing up cross-references between documents.</guilabel>
++
++   After installing the HTML files, gtkdoc-fixxref can be run to fix up any
++   cross-references between separate documents. For example, the GTK+
++documentation
++   contains many cross-references to types documented in the GLib manual.
++
++   </para>
++  </listitem>
++ </orderedlist>
++
++  </sect1>
++
++  <sect1 id="gettinggtkdoc">
++   <title>Getting GTK-Doc</title>
++
++  <sect2 id="requirements">
++   <title>Requirements</title>
++   <para>
++
++
++<guilabel>Perl v5</guilabel> - the main scripts are in Perl.
++   </para>
++   <para>
++<guilabel>DocBook DTD v3.0</guilabel> - This is the DocBook SGML DTD.
++   <ulink url="http://www.ora.com/davenport" type="http">http://www.ora.com/davenport</ulink>
++   </para>
++   <para>
++<guilabel>Jade v1.1</guilabel> - This is a DSSSL processor for converting SGML to various formats.
++   <ulink url="http://www.jclark.com/jade" type="http">http://www.jclark.com/jade</ulink>
++   </para>
++   <para>
++<guilabel>Modular DocBook Stylesheets</guilabel>
++    This is the DSSSL code to convert DocBook to HTML (and a few other
++    formats). It's used together with jade.
++    I've customized the DSSSL code slightly, in gtk-doc.dsl, to colour
++    the program code listings/declarations, and to support global
++    cross-reference indices in the generated HTML.
++    <ulink url="http://nwalsh.com/docbook/dsssl" type="http">http://nwalsh.com/docbook/dsssl</ulink>
++   </para>
++   <para>
++<guilabel>docbook-to-man</guilabel> - if you want to create man pages from the DocBook.
++    I've customized the 'translation spec' slightly, to capitalise section
++    headings and add the 'GTK Library' title at the top of the pages and the
++    revision date at the bottom.
++    There is a link to this on <ulink url="http://www.ora.com/davenport" type="http">http://www.ora.com/davenport</ulink>
++    NOTE: This does not work yet.
++   </para>
++</sect2>
++
++  <sect2 id="installation">
++   <title>Installation</title>
++   <para>
++
++
++There is no standard place where the DocBook Modular Stylesheets are installed.
++   </para>
++   <para>
++gtk-doc's configure script searches these 3 directories automatically:
++   </para>
++   <para>
++ <filename> /usr/lib/sgml/stylesheets/nwalsh-modular   </filename>     (used by RedHat)
++   </para>
++   <para>
++ <filename>  /usr/lib/dsssl/stylesheets/docbook         </filename>     (used by Debian)
++   </para>
++   <para>
++ <filename>  /usr/share/sgml/docbkdsl                   </filename>     (used by SuSE)
++
++   </para>
++   <para>
++If you have the stylesheets installed somewhere else, you need to configure
++gtk-doc using the option:
++
++  <command> --with-dsssl-dir=&lt;PATH_TO_TOPLEVEL_STYLESHEETS_DIR&gt; </command>
++
++
++   </para>
++</sect2>
++
++  </sect1>
++
++  <sect1 id="whentousegtkdoc">
++   <title>When to Use GTK-Doc</title>
++
++   <para>
++    (FIXME)
++   </para>
++
++   <para>
++    (What things GTK-Doc should, and shouldn't, be used for.)
++
++   </para>
++
++  </sect1>
++
++  <sect1 id="aboutgtkdoc">
++   <title>About GTK-Doc</title>
++
++   <para>
++    (FIXME)
++   </para>
++
++   <para>
++    (History, authors, web pages, license, future plans,
++    comparison with other similar systems.)
++   </para>
++
++  </sect1>
++
++  <sect1 id="aboutthismanual">
++   <title>About this Manual</title>
++
++   <para>
++    (FIXME)
++   </para>
++
++   <para>
++    (who it is meant for, where you can get it, license)
++   </para>
++
++  </sect1>
++
++ </chapter>
++
++
++ <!-- ======== Appendix: FDL ================================== -->
++&FDL;
++
++</book>
++
++
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/tools/docpercentages.pl gtk-doc/tools/docpercentages.pl
+--- gtk-doc-0.9/tools/docpercentages.pl	Thu Jan  1 01:00:00 1970
++++ gtk-doc/tools/docpercentages.pl	Wed May  1 02:05:08 2002
+@@ -0,0 +1,155 @@
++#!/usr/bin/perl -w
++
++#############################################################################
++# Function    : CreateValidSGMLID
++# Description : Creates a valid SGML 'id' from the given string.
++#		NOTE: SGML ids are case-insensitive, so we have a few special
++#		      cases to avoid clashes of ids.
++# Arguments   : $id - the string to be converted into a valid SGML id.
++#############################################################################
++
++sub CreateValidSGMLID {
++    my ($id) = $_[0];
++
++    # Append -CAPS to all all-caps identifiers
++
++    # Special case, '_' would end up as '' so we use 'gettext-macro' instead.
++    if ($id eq "_") { return "gettext-macro"; }
++
++    if ($id !~ /[a-z]/) { $id .= "-CAPS" };
++
++    $id =~ s/[_ ]/-/g;
++    $id =~ s/[,\.]//g;
++    $id =~ s/^-*//;
++    $id =~ s/::/-/g;
++
++    return $id;
++}
++
++$BASEDIR=shift @ARGV;
++
++print <<EOT;
++<table cellspacing="0" cellpadding="2">
++  <tr><th align="left">Module</th><th style="padding-left: 0.5em; padding-right: 0.5em" colspan="4">Documented</th></tr>
++EOT
++
++my $row = 0; 
++while (@ARGV) {
++    my $percentage;
++    my $documented;
++    my $undocumented;
++    my @undocumented_symbols;
++    
++    my $module_name = shift @ARGV;
++    my $file = shift @ARGV;
++    my $indexfile = shift @ARGV;
++
++    open DOCUMENTED, "<$file" or die "Cannot open $file: $!\n";
++
++    while (<DOCUMENTED>) {
++	if      (/(\d+)% (function|symbol) docs coverage/) {
++	    $percentage = $1;
++	} elsif (/(\d+) (function|symbol)s documented/) {
++	    $documented = $1;
++	} elsif (/(\d+) not documented/) {
++	    $undocumented = $1;
++	} elsif (/^\s*(\w+)\s*$/) {
++	    push @undocumented_symbols, $1;
++	}
++    }
++
++    close DOCUMENTED;
++
++    my $complete = defined $percentage && defined $documented && defined $undocumented;
++    if (!$complete) {
++	die "Cannot parse documentation status file $file\n";
++    }
++
++    my $total = $documented + $undocumented;
++
++    my $directory;
++    ($directory = $indexfile) =~ s@/[^/]*$@@;
++    
++    $bgcolor = ($row % 2 == 0) ? "#f7ebd3" : "#fffcf4";
++
++    print <<EOT;
++  <tr bgcolor="$bgcolor">
++    <td><a href="$indexfile">$module_name</a></td>
++    <td align="right" style="padding-left: 0.5em">$documented</td>
++	<td>/</td><td>$total</td>
++    <td style="padding-right: 0.5em">($percentage%)</td>
++EOT
++    if ($undocumented != 0) {
++	print <<EOT;
++    <td><a href="$directory/undocumented.html"><small>[missing]<small></a></td>
++EOT
++    }
++    print <<EOT;
++  </tr>
++EOT
++    
++    #
++    # Print an index of undocumented symbols for this module
++    #
++
++    @undocumented_symbols = sort { uc($a) cmp uc($b) } @undocumented_symbols;
++
++    my $base = "$BASEDIR/$directory";
++
++    open INDEX_SGML, "<$base/index.sgml" or die "Cannot open $base/index.sgml: $!\n";
++
++    my %index_symbols;
++    
++    while (<INDEX_SGML>) {
++	if (/<ANCHOR\s+id ="([^"]+)"\s+href="([^"]+)">/) {
++	    $index_symbols{$1} = $2;
++	}
++    }
++
++    close INDEX_SGML;
++
++    open UNDOC_OUT, ">$base/undocumented.html" or die "Cannot open $base/undocumented.html: $!\n";
++    print UNDOC_OUT <<EOT;
++<html>
++<head>
++<title>Undocumented functions in $module_name</title>
++</head>
++<body bgcolor="#ffffff">
++<table>
++  <tr>
++EOT
++    my $i = 0;
++    for $symbol (@undocumented_symbols) {
++	my $id = uc(CreateValidSGMLID($symbol));
++
++	my $output;
++	if (exists $index_symbols{$id}) {
++	    my $href;
++	    
++	    ($href = $index_symbols{$id}) =~ s@.*/(.*)$@$1@; 
++	    
++	    $output = qq(<a href="$href">$symbol</a>);
++	} else {
++	    $output = qq($symbol);
++	}
++	print UNDOC_OUT "    <td>$output</td>\n";
++	if ($i % 3 == 2) {
++	    print UNDOC_OUT "  </tr><tr>\n";
++	}
++    
++        $i++;
++    }
++
++    print UNDOC_OUT <<EOT;
++  </tr>
++</table>
++</body>
++</html>
++EOT
++    close UNDOC_OUT;
++    $row++;
++}
++
++print <<EOT;
++</table>
++EOT
+diff -urN --exclude missing --exclude mkinstalldirs --exclude autogen.sh --exclude install-sh --exclude gtk-doc.spec --exclude aclocal.m4 --exclude configure --exclude Makefile.in --exclude INSTALL --exclude COPYING --exclude CVS --exclude .cvsignore gtk-doc-0.9/xml.dcl gtk-doc/xml.dcl
+--- gtk-doc-0.9/xml.dcl	Thu Jan  1 01:00:00 1970
++++ gtk-doc/xml.dcl	Sat May 18 01:45:25 2002
+@@ -0,0 +1,179 @@
++<!SGML -- SGML Declaration for valid XML documents --
++     "ISO 8879:1986 (WWW)"
++
++     CHARSET
++         BASESET
++             "ISO Registration Number 176//CHARSET
++             ISO/IEC 10646-1:1993 UCS-4 with implementation 
++             level 3//ESC 2/5 2/15 4/6"
++         DESCSET
++                0       9       UNUSED
++                9       2       9
++                11      2       UNUSED
++                13      1       13
++                14      18      UNUSED
++                32      95      32
++                127     1       UNUSED
++                128     32      UNUSED
++             -- use this instead of the official declaration because SP only
++                supports 16-bit characters --
++                160     65374   160
++                65534   2       UNUSED 
++             -- 55296   2048    UNUSED
++                57344   8190    57344
++                65534   2       UNUSED
++                65536   1048576 65536 --
++     CAPACITY NONE
++
++     SCOPE DOCUMENT
++
++     SYNTAX
++         SHUNCHAR NONE
++         BASESET "ISO Registration Number 176//CHARSET
++                 ISO/IEC 10646-1:1993 UCS-4 with implementation 
++                 level 3//ESC 2/5 2/15 4/6"
++         DESCSET
++             0 1114112 0
++         FUNCTION
++             RE    13
++             RS    10
++             SPACE 32
++             TAB   SEPCHAR 9
++
++         NAMING
++             LCNMSTRT ""
++             UCNMSTRT ""
++             NAMESTRT
++                 58 95 192-214 216-246 248-305 308-318 321-328
++                 330-382 384-451 461-496 500-501 506-535 592-680
++                 699-705 902 904-906 908 910-929 931-974 976-982
++                 986 988 990 992 994-1011 1025-1036 1038-1103
++                 1105-1116 1118-1153 1168-1220 1223-1224
++                 1227-1228 1232-1259 1262-1269 1272-1273
++                 1329-1366 1369 1377-1414 1488-1514 1520-1522
++                 1569-1594 1601-1610 1649-1719 1722-1726
++                 1728-1742 1744-1747 1749 1765-1766 2309-2361
++                 2365 2392-2401 2437-2444 2447-2448 2451-2472
++                 2474-2480 2482 2486-2489 2524-2525 2527-2529
++                 2544-2545 2565-2570 2575-2576 2579-2600
++                 2602-2608 2610-2611 2613-2614 2616-2617
++                 2649-2652 2654 2674-2676 2693-2699 2701
++                 2703-2705 2707-2728 2730-2736 2738-2739
++                 2741-2745 2749 2784 2821-2828 2831-2832
++                 2835-2856 2858-2864 2866-2867 2870-2873 2877
++                 2908-2909 2911-2913 2949-2954 2958-2960
++                 2962-2965 2969-2970 2972 2974-2975 2979-2980
++                 2984-2986 2990-2997 2999-3001 3077-3084
++                 3086-3088 3090-3112 3114-3123 3125-3129
++                 3168-3169 3205-3212 3214-3216 3218-3240
++                 3242-3251 3253-3257 3294 3296-3297 3333-3340
++                 3342-3344 3346-3368 3370-3385 3424-3425
++                 3585-3630 3632 3634-3635 3648-3653 3713-3714
++                 3716 3719-3720 3722 3725 3732-3735 3737-3743
++                 3745-3747 3749 3751 3754-3755 3757-3758 3760
++                 3762-3763 3773 3776-3780 3904-3911 3913-3945
++                 4256-4293 4304-4342 4352 4354-4355 4357-4359
++                 4361 4363-4364 4366-4370 4412 4414 4416 4428
++                 4430 4432 4436-4437 4441 4447-4449 4451 4453
++                 4455 4457 4461-4462 4466-4467 4469 4510 4520
++                 4523 4526-4527 4535-4536 4538 4540-4546 4587
++                 4592 4601 7680-7835 7840-7929 7936-7957
++                 7960-7965 7968-8005 8008-8013 8016-8023 8025
++                 8027 8029 8031-8061 8064-8116 8118-8124 8126
++                 8130-8132 8134-8140 8144-8147 8150-8155
++                 8160-8172 8178-8180 8182-8188 8486 8490-8491
++                 8494 8576-8578 12295 12321-12329 12353-12436
++                 12449-12538 12549-12588 19968-40869 44032-55203
++
++             LCNMCHAR ""
++             UCNMCHAR ""
++             NAMECHAR
++                 45-46 183 720-721 768-837 864-865 903 1155-1158
++                 1425-1441 1443-1465 1467-1469 1471 1473-1474
++                 1476 1600 1611-1618 1632-1641 1648 1750-1764
++                 1767-1768 1770-1773 1776-1785 2305-2307 2364
++                 2366-2381 2385-2388 2402-2403 2406-2415
++                 2433-2435 2492 2494-2500 2503-2504 2507-2509
++                 2519 2530-2531 2534-2543 2562 2620 2622-2626
++                 2631-2632 2635-2637 2662-2673 2689-2691 2748
++                 2750-2757 2759-2761 2763-2765 2790-2799
++                 2817-2819 2876 2878-2883 2887-2888 2891-2893
++                 2902-2903 2918-2927 2946-2947 3006-3010
++                 3014-3016 3018-3021 3031 3047-3055 3073-3075
++                 3134-3140 3142-3144 3146-3149 3157-3158
++                 3174-3183 3202-3203 3262-3268 3270-3272
++                 3274-3277 3285-3286 3302-3311 3330-3331
++                 3390-3395 3398-3400 3402-3405 3415 3430-3439
++                 3633 3636-3642 3654-3662 3664-3673 3761
++                 3764-3769 3771-3772 3782 3784-3789 3792-3801
++                 3864-3865 3872-3881 3893 3895 3897 3902-3903
++                 3953-3972 3974-3979 3984-3989 3991 3993-4013
++                 4017-4023 4025 8400-8412 8417 12293 12330-12335
++                 12337-12341 12441-12442 12445-12446 12540-12542
++
++             NAMECASE
++                 GENERAL NO
++                 ENTITY  NO
++
++         DELIM
++             GENERAL SGMLREF
++             HCRO "&#38;#x" -- 38 is the number for ampersand --
++             NESTC "/"
++             NET ">"
++             PIC "?>"
++             SHORTREF NONE
++
++         NAMES
++             SGMLREF
++
++         QUANTITY NONE
++
++         ENTITIES
++             "amp" 38
++             "lt" 60
++             "gt" 62
++             "quot" 34
++             "apos" 39
++
++     FEATURES
++         MINIMIZE
++             DATATAG NO
++             OMITTAG NO
++             RANK NO
++             SHORTTAG
++                 STARTTAG
++                     EMPTY NO
++                     UNCLOSED NO 
++                     NETENABL IMMEDNET
++                 ENDTAG
++                     EMPTY NO 
++                     UNCLOSED NO
++                 ATTRIB
++                     DEFAULT YES
++                     OMITNAME NO
++                     VALUE NO
++             EMPTYNRM YES
++             IMPLYDEF
++                 ATTLIST NO
++                 DOCTYPE NO
++                 ELEMENT NO
++                 ENTITY NO
++                 NOTATION NO
++         LINK
++             SIMPLE NO
++             IMPLICIT NO
++             EXPLICIT NO
++         OTHER
++             CONCUR NO
++             SUBDOC NO
++             FORMAL NO
++             URN NO
++             KEEPRSRE YES
++             VALIDITY TYPE
++             ENTITIES
++                 REF ANY
++                 INTEGRAL YES
++     APPINFO NONE
++     SEEALSO "ISO 8879:1986//NOTATION
++             Extensible Markup Language (XML) 1.0//EN"
++>
