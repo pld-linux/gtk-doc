@@ -22,14 +22,14 @@ gtk-doc is a tool for generating API reference documentation. It is
 used for generating the documentation for GTK+, GLib and GNOME.
 
 %prep
-
 %setup -q
 %patch -p1 -b .pubid
 # Move this doc file to avoid name collisions
 mv doc/README doc/README.docs
 
 %build
-%configure --enable-public-id
+%configure \
+	--enable-public-id
 %{__make}
 
 %install
@@ -37,13 +37,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
+gzip -9nf AUTHORS README doc/* examples/*
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-
 %doc AUTHORS README doc/* examples
-
 %attr(755,root,root) %{_bindir}/*
-%{_datadir}/gtk-doc/
+%{_datadir}/gtk-doc
