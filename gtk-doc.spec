@@ -52,7 +52,7 @@ mv -f doc/README doc/README.docs
 
 %build
 rm -f missing
-aclocal
+%{__aclocal}
 %{__autoconf}
 %{__automake}
 %configure \
