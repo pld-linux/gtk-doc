@@ -1,7 +1,7 @@
 Summary:	API documentation generation tool for GTK+ and GNOME
-Summary(es): El generador de documentación del GTK
+Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
-Summary(pt_BR): O gerador de documentação do GTK
+Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	0.9
 Release:	3
@@ -33,10 +33,12 @@ Summary(pl):	Katalogi na dokumentacjê wygenerowan± za pomoc± gtk-doc
 Group:		Documentation
 
 %description common
-Common directories for API documentation for various packages, generated using gtk-doc.
+Common directories for API documentation for various packages,
+generated using gtk-doc.
 
 %description common -l pl
-Katalogi na dokumetacjê API do ró¿nych pakietów, wygenerowan± za pomoc± gtk-doc.
+Katalogi na dokumetacjê API do ró¿nych pakietów, wygenerowan± za
+pomoc± gtk-doc.
 
 %prep
 %setup -q
