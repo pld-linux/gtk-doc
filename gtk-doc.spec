@@ -3,12 +3,12 @@ Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.2
-Release:	2
+Version:	1.3
+Release:	1
 License:	LGPL
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.2/%{name}-%{version}.tar.bz2
-# Source0-md5:	7776ad690ca6baaaf071c83b51d2a234
+Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.3/%{name}-%{version}.tar.bz2
+# Source0-md5:	d105d5b28e7e023ab1b7e85fb65e45c3
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -62,22 +62,26 @@ mv -f doc/README doc/README.docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html
+install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html \
+	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README doc/*
+%doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
 %attr(755,root,root) %{_bindir}/*
 %{_datadir}/gtk-doc
 %{_pkgconfigdir}/%{name}.pc
 %{_aclocaldir}/*
 %{_datadir}/sgml/%{name}
+%{_examplesdir}/%{name}-%{version}
 
 %files common
 %defattr(644,root,root,755)
