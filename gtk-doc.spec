@@ -7,9 +7,6 @@ Version:	0.7
 Release:	2
 License:	LGPL
 Group:		Development/Tools
-Group(de):	Entwicklung/Werkzeuge
-Group(fr):	Development/Outils
-Group(pl):	Programowanie/Narzêdzia
 Source0:	ftp://ftp.gtk.org/pub/gtk/v1.1/docs/rdp/%{name}-%{version}.tar.gz
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
