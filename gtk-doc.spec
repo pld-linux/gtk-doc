@@ -4,16 +4,23 @@ Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	0.9
-Release:	3
+Release:	8
 License:	LGPL
 Group:		Development/Tools
 Source0:	ftp://ftp.gtk.org/pub/gtk/v1.1/docs/rdp/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-xml.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	docbook-utils
 BuildRequires:	openjade
+BuildRequires:	libxslt-progs
+Requires:	docbook-dtd412-xml >= 1.0-10
+Requires:	docbook-style-dsssl >= 1.77
+Requires:	docbook-style-xsl >= 1.55.0-3
 Requires:	docbook-utils >= 0.6.10
+Requires:	gnome-doc-tools >= 1.0-4
+Requires:	libxslt-progs
 Requires:	openjade
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -42,11 +49,12 @@ pomoc± gtk-doc.
 
 %prep
 %setup -q
+%patch0 -p1
 mv -f doc/README doc/README.docs
 
 %build
 rm -f missing
-%{__aclocal}
+aclocal
 %{__autoconf}
 %{__automake}
 %configure \
