@@ -46,7 +46,7 @@ Common directories for API documentation for various packages,
 generated using gtk-doc.
 
 %description common -l pl
-Katalogi na dokumetacjê API do ró¿nych pakietów, wygenerowan± za
+Katalogi na dokumentacjê API do ró¿nych pakietów, wygenerowan± za
 pomoc± gtk-doc.
 
 %prep
