@@ -8,6 +8,7 @@ Release:	1
 License:	LGPL
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/%{name}/0.10/%{name}-%{version}.tar.bz2
+# Source0-md5:	77f710f8f22e52b15290ed9399d2eee9
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
