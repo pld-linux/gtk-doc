@@ -4,7 +4,7 @@ Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.4
-Release:	1
+Release:	2
 License:	LGPL
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.4/%{name}-%{version}.tar.bz2
@@ -14,7 +14,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	docbook-utils
 BuildRequires:	openjade
-BuildRequires:	libxslt-progs
+BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
 BuildRequires:	perl-base >= 5.6.0
@@ -23,7 +23,7 @@ Requires:	docbook-style-dsssl >= 1.77
 Requires:	docbook-style-xsl >= 1.55.0-3
 Requires:	docbook-utils >= 0.6.10
 Requires:	gnome-doc-tools >= 1.0-4
-Requires:	libxslt-progs
+Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
