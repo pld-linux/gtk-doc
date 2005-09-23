@@ -4,7 +4,7 @@ Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.4
-Release:	2
+Release:	3
 License:	LGPL
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.4/%{name}-%{version}.tar.bz2
@@ -25,6 +25,7 @@ Requires:	docbook-utils >= 0.6.10
 Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
+Requires:	%{name}-automake
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -48,6 +49,20 @@ generated using gtk-doc.
 %description common -l pl
 Katalogi na dokumentacjê API do ró¿nych pakietów, wygenerowan± za
 pomoc± gtk-doc.
+
+%package automake
+Summary:	Automake macros for gtk-doc	
+Summary(pl):	Makra dla automake do gtk-doc
+# ???
+Group:		Documentation
+Conflicts:	gtk-doc < 0:1.4-3
+Requires:	automake
+
+%description automake
+Automake macros for gtk-doc.
+
+%description automake -l pl
+Makra dla automake do gtk-doc.
 
 %prep
 %setup -q
@@ -79,9 +94,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 %{_datadir}/gtk-doc
 %{_pkgconfigdir}/%{name}.pc
-%{_aclocaldir}/*
 %{_datadir}/sgml/%{name}
 %{_examplesdir}/%{name}-%{version}
+
+%files automake
+%defattr(644,root,root,755)
+%{_aclocaldir}/*
 
 %files common
 %defattr(644,root,root,755)
