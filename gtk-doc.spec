@@ -12,11 +12,11 @@ Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.4/%{name}-%{version}.t
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	docbook-utils
-BuildRequires:	openjade
-BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
+BuildRequires:	docbook-utils
+BuildRequires:	libxslt-progs >= 1.1.15
+BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
 Requires:	docbook-dtd412-xml >= 1.0-10
 Requires:	docbook-style-dsssl >= 1.77
@@ -25,7 +25,7 @@ Requires:	docbook-utils >= 0.6.10
 Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
-Requires:	%{name}-automake
+Requires:	%{name}-automake = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -39,8 +39,7 @@ do generowania dokumentacji GLib, GTK+ i GNOME.
 %package common
 Summary:	Common directories for documetation generated using gtk-doc
 Summary(pl):	Katalogi na dokumentacjê wygenerowan± za pomoc± gtk-doc
-# ???
-Group:		Documentation
+Group:		Development
 
 %description common
 Common directories for API documentation for various packages,
@@ -53,10 +52,9 @@ pomoc± gtk-doc.
 %package automake
 Summary:	Automake macros for gtk-doc	
 Summary(pl):	Makra dla automake do gtk-doc
-# ???
-Group:		Documentation
-Conflicts:	gtk-doc < 0:1.4-3
+Group:		Development/Tools
 Requires:	automake
+Conflicts:	gtk-doc < 0:1.4-3
 
 %description automake
 Automake macros for gtk-doc.
@@ -97,11 +95,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/sgml/%{name}
 %{_examplesdir}/%{name}-%{version}
 
-%files automake
-%defattr(644,root,root,755)
-%{_aclocaldir}/*
-
 %files common
 %defattr(644,root,root,755)
 %dir %{_defaultdocdir}/gtk-doc
 %dir %{_defaultdocdir}/gtk-doc/html
+
+%files automake
+%defattr(644,root,root,755)
+%{_aclocaldir}/*
