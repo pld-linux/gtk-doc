@@ -18,6 +18,7 @@ BuildRequires:	docbook-utils
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
+Requires:	%{name}-automake = %{version}-%{release}
 Requires:	docbook-dtd412-xml >= 1.0-10
 Requires:	docbook-style-dsssl >= 1.77
 Requires:	docbook-style-xsl >= 1.55.0-3
@@ -25,7 +26,6 @@ Requires:	docbook-utils >= 0.6.10
 Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
-Requires:	%{name}-automake = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -50,7 +50,7 @@ Katalogi na dokumentacjê API do ró¿nych pakietów, wygenerowan± za
 pomoc± gtk-doc.
 
 %package automake
-Summary:	Automake macros for gtk-doc	
+Summary:	Automake macros for gtk-doc
 Summary(pl):	Makra dla automake do gtk-doc
 Group:		Development/Tools
 Requires:	automake
