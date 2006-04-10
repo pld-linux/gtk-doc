@@ -1,14 +1,17 @@
+#
+%include	/usr/lib/rpm/macros.perl
+#
 Summary:	API documentation generation tool for GTK+ and GNOME
 Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.5
+Version:	1.6
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.5/%{name}-%{version}.tar.bz2
-# Source0-md5:	9aff3cbfa99cc37e712621f3e4a60d46
+Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.6/%{name}-%{version}.tar.bz2
+# Source0-md5:	09c7a89efff2e0bbaba02a12bff58dfd
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -18,6 +21,7 @@ BuildRequires:	docbook-utils
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
+BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	scrollkeeper
 Requires(post,postun):	scrollkeeper
 Requires:	%{name}-automake = %{version}-%{release}
@@ -28,7 +32,11 @@ Requires:	docbook-utils >= 0.6.10
 Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# architecture-independant pkgconfig dir
+%define		_pkgconfigdir	%{_datadir}/pkgconfig
 
 %description
 gtk-doc is a tool for generating API reference documentation. It is
