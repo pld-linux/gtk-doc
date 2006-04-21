@@ -21,6 +21,7 @@ BuildRequires:	docbook-utils
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
+BuildRequires:	pkgconfig >= 0.19
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	scrollkeeper
 Requires(post,postun):	scrollkeeper
