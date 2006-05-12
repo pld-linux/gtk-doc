@@ -1,14 +1,17 @@
+#
+%include	/usr/lib/rpm/macros.perl
+#
 Summary:	API documentation generation tool for GTK+ and GNOME
 Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.4
-Release:	4
+Version:	1.6
+Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.4/%{name}-%{version}.tar.bz2
-# Source0-md5:	44d1cdce88c2eb4ccb962998ad0c0d1a
+Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.6/%{name}-%{version}.tar.bz2
+# Source0-md5:	09c7a89efff2e0bbaba02a12bff58dfd
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -18,6 +21,11 @@ BuildRequires:	docbook-utils
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
+BuildRequires:	pkgconfig >= 1:0.19
+BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	scrollkeeper
+Requires(post,postun):	scrollkeeper
+Requires:	%{name}-automake = %{version}-%{release}
 Requires:	docbook-dtd412-xml >= 1.0-10
 Requires:	docbook-style-dsssl >= 1.77
 Requires:	docbook-style-xsl >= 1.55.0-3
@@ -25,8 +33,12 @@ Requires:	docbook-utils >= 0.6.10
 Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
-Requires:	%{name}-automake = %{version}-%{release}
+Conflicts:	pkgconfig < 1:0.19
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# architecture-independant pkgconfig dir
+%define		_pkgconfigdir	%{_datadir}/pkgconfig
 
 %description
 gtk-doc is a tool for generating API reference documentation. It is
@@ -50,7 +62,7 @@ Katalogi na dokumentacjê API do ró¿nych pakietów, wygenerowan± za
 pomoc± gtk-doc.
 
 %package automake
-Summary:	Automake macros for gtk-doc	
+Summary:	Automake macros for gtk-doc
 Summary(pl):	Makra dla automake do gtk-doc
 Group:		Development/Tools
 Requires:	automake
@@ -83,10 +95,18 @@ install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html \
 
 install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
+%find_lang %{name} --with-gnome --all-name
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%post
+%scrollkeeper_update_post
+
+%postun
+%scrollkeeper_update_postun
+
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
 %attr(755,root,root) %{_bindir}/*
@@ -94,6 +114,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/%{name}.pc
 %{_datadir}/sgml/%{name}
 %{_examplesdir}/%{name}-%{version}
+%{_omf_dest_dir}/%{name}
 
 %files common
 %defattr(644,root,root,755)
