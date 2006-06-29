@@ -80,6 +80,7 @@ Makra dla automake do gtk-doc.
 mv -f doc/README doc/README.docs
 
 %build
+rm xmldocs.make
 %{__gnome_doc_common}
 %{__aclocal}
 %{__autoconf}
