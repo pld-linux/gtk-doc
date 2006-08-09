@@ -13,12 +13,12 @@ Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.7/%{name}-%{version}.tar.bz2
 # Source0-md5:	2543a3f5a7b5347fb135855ca55adea1
 URL:		http://www.gtk.org/rdp/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-utils
-BuildRequires:	gnome-common >= 2.12.0
+BuildRequires:	gnome-common >= 2.12.0-3
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
