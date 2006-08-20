@@ -7,7 +7,7 @@ Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.7
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.7/%{name}-%{version}.tar.bz2
