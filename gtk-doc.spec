@@ -89,7 +89,7 @@ mv -f doc/README doc/README.docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html \
+install -d $RPM_BUILD_ROOT%{_docdir}/gtk-doc/html \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__make} install \
@@ -120,8 +120,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files common
 %defattr(644,root,root,755)
-%dir %{_defaultdocdir}/gtk-doc
-%dir %{_defaultdocdir}/gtk-doc/html
+%dir %{_docdir}/gtk-doc
+%dir %{_docdir}/gtk-doc/html
 
 %files automake
 %defattr(644,root,root,755)
