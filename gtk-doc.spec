@@ -6,18 +6,19 @@ Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.6
+Version:	1.7
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.6/%{name}-%{version}.tar.bz2
-# Source0-md5:	09c7a89efff2e0bbaba02a12bff58dfd
+Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.7/%{name}-%{version}.tar.bz2
+# Source0-md5:	2543a3f5a7b5347fb135855ca55adea1
 URL:		http://www.gtk.org/rdp/
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-utils
+BuildRequires:	gnome-common
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 5.6.0
@@ -79,6 +80,7 @@ Makra dla automake do gtk-doc.
 mv -f doc/README doc/README.docs
 
 %build
+%{__gnome_doc_common}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
@@ -87,7 +89,7 @@ mv -f doc/README doc/README.docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_defaultdocdir}/gtk-doc/html \
+install -d $RPM_BUILD_ROOT%{_docdir}/gtk-doc/html \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__make} install \
@@ -118,8 +120,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files common
 %defattr(644,root,root,755)
-%dir %{_defaultdocdir}/gtk-doc
-%dir %{_defaultdocdir}/gtk-doc/html
+%dir %{_docdir}/gtk-doc
+%dir %{_docdir}/gtk-doc/html
 
 %files automake
 %defattr(644,root,root,755)
