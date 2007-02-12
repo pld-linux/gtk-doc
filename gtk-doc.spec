@@ -2,9 +2,9 @@
 %include	/usr/lib/rpm/macros.perl
 #
 Summary:	API documentation generation tool for GTK+ and GNOME
-Summary(es):	El generador de documentación del GTK
-Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
-Summary(pt_BR):	O gerador de documentação do GTK
+Summary(es.UTF-8):   El generador de documentaciÃ³n del GTK
+Summary(pl.UTF-8):   NarzÄ™dzie do generowania dokumentacji API do GTK+ i GNOME
+Summary(pt_BR.UTF-8):   O gerador de documentaÃ§Ã£o do GTK
 Name:		gtk-doc
 Version:	1.7
 Release:	3
@@ -45,26 +45,26 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 gtk-doc is a tool for generating API reference documentation. It is
 used for generating the documentation for GTK+, GLib and GNOME.
 
-%description -l pl
-gtk-doc jest narzêdziem do generowania dokumentacji API. Jest u¿ywany
+%description -l pl.UTF-8
+gtk-doc jest narzÄ™dziem do generowania dokumentacji API. Jest uÅ¼ywany
 do generowania dokumentacji GLib, GTK+ i GNOME.
 
 %package common
 Summary:	Common directories for documetation generated using gtk-doc
-Summary(pl):	Katalogi na dokumentacjê wygenerowan± za pomoc± gtk-doc
+Summary(pl.UTF-8):   Katalogi na dokumentacjÄ™ wygenerowanÄ… za pomocÄ… gtk-doc
 Group:		Development
 
 %description common
 Common directories for API documentation for various packages,
 generated using gtk-doc.
 
-%description common -l pl
-Katalogi na dokumentacjê API do ró¿nych pakietów, wygenerowan± za
-pomoc± gtk-doc.
+%description common -l pl.UTF-8
+Katalogi na dokumentacjÄ™ API do rÃ³Å¼nych pakietÃ³w, wygenerowanÄ… za
+pomocÄ… gtk-doc.
 
 %package automake
 Summary:	Automake macros for gtk-doc
-Summary(pl):	Makra dla automake do gtk-doc
+Summary(pl.UTF-8):   Makra dla automake do gtk-doc
 Group:		Development/Tools
 Requires:	automake
 Conflicts:	gtk-doc < 0:1.4-3
@@ -72,7 +72,7 @@ Conflicts:	gtk-doc < 0:1.4-3
 %description automake
 Automake macros for gtk-doc.
 
-%description automake -l pl
+%description automake -l pl.UTF-8
 Makra dla automake do gtk-doc.
 
 %prep
