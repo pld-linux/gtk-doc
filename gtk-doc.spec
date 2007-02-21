@@ -6,12 +6,12 @@ Summary(es):	El generador de documentación del GTK
 Summary(pl):	Narzêdzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.7
+Version:	1.8
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.7/%{name}-%{version}.tar.bz2
-# Source0-md5:	2543a3f5a7b5347fb135855ca55adea1
+# Source0-md5:	e61595df21431db28c83fe4c7d4a4fa8
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -97,8 +97,6 @@ install -d $RPM_BUILD_ROOT%{_docdir}/gtk-doc/html \
 
 install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%find_lang %{name} --with-gnome --all-name
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -108,7 +106,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun
 %scrollkeeper_update_postun
 
-%files -f %{name}.lang
+%files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
 %attr(755,root,root) %{_bindir}/*
