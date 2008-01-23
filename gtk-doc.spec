@@ -35,6 +35,7 @@ Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
 Conflicts:	pkgconfig < 1:0.19
+#BuildArch:	noarch (rejected by autoconf)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # architecture-independant pkgconfig dir
