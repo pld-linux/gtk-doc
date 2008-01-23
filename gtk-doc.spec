@@ -111,7 +111,8 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
-%attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_bindir}/gtkdoc-*
+%attr(755,root,root) %{_bindir}/gtkdocize
 %{_datadir}/gtk-doc
 %{_pkgconfigdir}/%{name}.pc
 %{_datadir}/sgml/%{name}
@@ -125,4 +126,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files automake
 %defattr(644,root,root,755)
-%{_aclocaldir}/*
+%{_aclocaldir}/gtk-doc.m4
