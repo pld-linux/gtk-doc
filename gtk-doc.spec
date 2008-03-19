@@ -89,7 +89,7 @@ mv -f doc/README doc/README.docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_docdir},%{_datadir}}/gtk-doc/html \
+install -d $RPM_BUILD_ROOT%{_docdir}/gtk-doc/html \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__make} install \
