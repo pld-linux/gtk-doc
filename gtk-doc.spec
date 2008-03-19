@@ -7,7 +7,7 @@ Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.9
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.9/%{name}-%{version}.tar.bz2
@@ -89,7 +89,7 @@ mv -f doc/README doc/README.docs
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_docdir}/gtk-doc/html \
+install -d $RPM_BUILD_ROOT{%{_docdir},%{_datadir}}/gtk-doc/html \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__make} install \
