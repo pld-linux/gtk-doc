@@ -18,10 +18,12 @@ BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-utils
+BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gnome-common >= 2.12.0-3
+BuildRequires:	libtool
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
-BuildRequires:	perl-base >= 5.6.0
+BuildRequires:	perl-base >= 1:5.6.0
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	rpmbuild(find_lang) >= 1.23
@@ -82,6 +84,7 @@ mv -f doc/README doc/README.docs
 
 %build
 %{__gnome_doc_common}
+%{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
