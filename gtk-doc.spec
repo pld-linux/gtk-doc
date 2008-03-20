@@ -6,24 +6,27 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.9
-Release:	2
+Version:	1.10
+Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.9/%{name}-%{version}.tar.bz2
-# Source0-md5:	bcd002f381385812737a05538eb8b21e
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.10/%{name}-%{version}.tar.bz2
+# Source0-md5:	cbd4be396b0cf8b8ce1fc9b927cdf451
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-utils
+BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gnome-common >= 2.12.0-3
+BuildRequires:	libtool
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
-BuildRequires:	perl-base >= 5.6.0
+BuildRequires:	perl-base >= 1:5.6.0
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	scrollkeeper >= 1:0.3.5
 Requires(post,postun):	scrollkeeper
 Requires:	%{name}-automake = %{version}-%{release}
@@ -81,6 +84,7 @@ mv -f doc/README doc/README.docs
 
 %build
 %{__gnome_doc_common}
+%{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
@@ -97,7 +101,7 @@ install -d $RPM_BUILD_ROOT{%{_gtkdocdir},%{_datadir}}/gtk-doc/html \
 
 install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%find_lang %{name} --with-gnome --all-name
+%find_lang %{name} --with-gnome --with-omf --all-name
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -117,7 +121,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_pkgconfigdir}/%{name}.pc
 %{_datadir}/sgml/%{name}
 %{_examplesdir}/%{name}-%{version}
-%{_omf_dest_dir}/%{name}
 
 %files common
 %defattr(644,root,root,755)
