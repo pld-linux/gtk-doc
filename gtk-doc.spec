@@ -18,7 +18,6 @@ BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl >= 1.74.0
-BuildRequires:	docbook-utils
 BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gnome-common >= 2.12.0-3
 BuildRequires:	gnome-doc-utils >= 0.3.2
@@ -29,6 +28,7 @@ BuildRequires:	perl-base >= 1:5.6.0
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	python >= 2.3
 BuildRequires:	rpm-perlprov >= 4.1-13
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	scrollkeeper >= 1:0.3.5
 Requires(post,postun):	scrollkeeper
