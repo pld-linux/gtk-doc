@@ -17,7 +17,7 @@ BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-dtd43-xml
-BuildRequires:	docbook-style-xsl
+BuildRequires:	docbook-style-xsl >= 1.74.0
 BuildRequires:	docbook-utils
 BuildRequires:	glib2-devel >= 1:2.6.0
 BuildRequires:	gnome-common >= 2.12.0-3
