@@ -37,7 +37,6 @@ Requires:	docbook-dtd43-xml
 Requires:	docbook-style-dsssl >= 1.77
 Requires:	docbook-style-xsl >= 1.55.0-3
 Requires:	docbook-utils >= 0.6.10
-Requires:	gnome-doc-tools >= 1.0-4
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
 Conflicts:	pkgconfig < 1:0.19
