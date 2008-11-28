@@ -1,4 +1,7 @@
 #
+# Conditional build:
+%bcond_with	tests	# build regression tests programs
+#
 %include	/usr/lib/rpm/macros.perl
 #
 Summary:	API documentation generation tool for GTK+ and GNOME
@@ -7,21 +10,22 @@ Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.11
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.11/%{name}-%{version}.tar.bz2
 # Source0-md5:	b5e268c71fa90aad890cf53715664d0a
+Patch0:		%{name}-noarch.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
 BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl >= 1.74.0
-BuildRequires:	glib2-devel >= 1:2.6.0
+%{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
 BuildRequires:	gnome-common >= 2.12.0-3
 BuildRequires:	gnome-doc-utils >= 0.3.2
-BuildRequires:	libtool
+%{?with_tests:BuildRequires:	libtool}
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	openjade
 BuildRequires:	perl-base >= 1:5.6.0
@@ -40,7 +44,7 @@ Requires:	docbook-utils >= 0.6.10
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
 Conflicts:	pkgconfig < 1:0.19
-#BuildArch:	noarch (rejected by autoconf)
+%{!?with_tests:BuildArch:	noarch}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 # architecture-independant pkgconfig dir
@@ -82,11 +86,12 @@ pomocą gtk-doc.
 
 %prep
 %setup -q
+%{!?with_tests:%patch0 -p1}
 mv -f doc/README doc/README.docs
 
 %build
 %{__gnome_doc_common}
-%{__libtoolize}
+%{?with_tests:%{__libtoolize}}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
