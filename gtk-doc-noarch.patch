@@ -1,0 +1,38 @@
+--- gtk-doc-1.11/Makefile.am.orig	2008-11-27 11:51:21.662672708 +0100
++++ gtk-doc-1.11/Makefile.am	2008-11-27 11:51:27.662260372 +0100
+@@ -1,6 +1,6 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+-SUBDIRS = help tests
++SUBDIRS = help
+ 
+ bin_SCRIPTS = \
+ 	gtkdoc-check    \
+--- gtk-doc-1.11/configure.in.orig	2008-11-27 11:50:03.668033103 +0100
++++ gtk-doc-1.11/configure.in	2008-11-27 11:50:30.166211942 +0100
+@@ -21,7 +21,6 @@
+ 
+ AC_ISC_POSIX
+ AC_PROG_CC
+-AC_PROG_LIBTOOL
+ 
+ # Make sure we have pkg-config >= 0.19, so installing in $(datadir) is OK.
+ PKG_PROG_PKG_CONFIG([0.19])
+@@ -154,17 +153,6 @@
+ gtkdoc-common.pl
+ help/Makefile
+ help/manual/Makefile
+-tests/Makefile
+-tests/gobject/Makefile
+-tests/gobject/src/Makefile
+-tests/gobject/docs/Makefile
+-tests/gobject/docs-tmpl/Makefile
+-tests/bugs/Makefile
+-tests/bugs/src/Makefile
+-tests/bugs/docs/Makefile
+-tests/annotations/Makefile
+-tests/annotations/src/Makefile
+-tests/annotations/docs/Makefile
+ ])
+ 
+ dnl run chmod on these after parsing them.
