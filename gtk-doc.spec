@@ -39,7 +39,7 @@ Requires(post,postun):	scrollkeeper
 Requires:	%{name}-automake = %{version}-%{release}
 Requires:	docbook-dtd43-xml
 Requires:	docbook-style-dsssl >= 1.77
-Requires:	docbook-style-xsl >= 1.55.0-3
+Requires:	docbook-style-xsl >= 1.74.0
 Requires:	docbook-utils >= 0.6.10
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
