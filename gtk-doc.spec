@@ -16,6 +16,7 @@ Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.11/%{name}-%{version}.tar.bz2
 # Source0-md5:	b5e268c71fa90aad890cf53715664d0a
 Patch0:		%{name}-noarch.patch
+Patch1:		%{name}-spaces.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -87,6 +88,7 @@ pomocą gtk-doc.
 %prep
 %setup -q
 %{!?with_tests:%patch0 -p1}
+%patch1 -p1
 mv -f doc/README doc/README.docs
 
 %build
