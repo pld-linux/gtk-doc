@@ -1,0 +1,12 @@
+diff -burNp gtk-doc-1.11/gtkdoc-common.pl.in gtk-doc-1.11-dud/gtkdoc-common.pl.in
+--- gtk-doc-1.11/gtkdoc-common.pl.in	2008-09-10 18:17:57.000000000 +0200
++++ gtk-doc-1.11-dud/gtkdoc-common.pl.in	2009-03-17 19:17:33.572282484 +0100
+@@ -51,7 +51,7 @@ sub UpdateFileIfChanged {
+     my $exit_code = 1;
+ 
+     if (-e $old_file) {
+-	`cmp -s $old_file $new_file`;
++	`cmp -s "$old_file" "$new_file"`;
+ 	$exit_code = $? >> 8;
+ #	print "   cmp exit code: $exit_code ($?)\n";
+     }
