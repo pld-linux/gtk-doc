@@ -9,14 +9,13 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.11
-Release:	2
+Version:	1.13
+Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.11/%{name}-%{version}.tar.bz2
-# Source0-md5:	b5e268c71fa90aad890cf53715664d0a
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.13/%{name}-%{version}.tar.bz2
+# Source0-md5:	27940d6cd5c9dcda8fc003043d8c299a
 Patch0:		%{name}-noarch.patch
-Patch1:		%{name}-spaces.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.52
 BuildRequires:	automake
@@ -44,6 +43,7 @@ Requires:	docbook-style-xsl >= 1.74.0
 Requires:	docbook-utils >= 0.6.10
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
+Suggests:	source-highlight
 Conflicts:	pkgconfig < 1:0.19
 %{!?with_tests:BuildArch:	noarch}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -88,16 +88,16 @@ pomocą gtk-doc.
 %prep
 %setup -q
 %{!?with_tests:%patch0 -p1}
-%patch1 -p1
 mv -f doc/README doc/README.docs
 
 %build
 %{__gnome_doc_common}
 %{?with_tests:%{__libtoolize}}
-%{__aclocal}
+%{__aclocal} -I m4
 %{__autoconf}
 %{__automake}
-%configure
+%configure \
+    HIGHLIGHT="/usr/bin/source-highlight"
 %{__make}
 
 %install
