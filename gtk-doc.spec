@@ -10,7 +10,7 @@ Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.13
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.13/%{name}-%{version}.tar.bz2
@@ -43,7 +43,7 @@ Requires:	docbook-style-xsl >= 1.74.0
 Requires:	docbook-utils >= 0.6.10
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
-Suggests:	source-highlight
+Requires:	source-highlight
 Conflicts:	pkgconfig < 1:0.19
 %{!?with_tests:BuildArch:	noarch}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -97,7 +97,7 @@ mv -f doc/README doc/README.docs
 %{__autoconf}
 %{__automake}
 %configure \
-    HIGHLIGHT="/usr/bin/source-highlight"
+	HIGHLIGHT="%{_bindir}/source-highlight"
 %{__make}
 
 %install
