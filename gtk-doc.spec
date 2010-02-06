@@ -28,7 +28,6 @@ BuildRequires:	gnome-common >= 2.12.0-3
 BuildRequires:	gnome-doc-utils >= 0.3.2
 %{?with_tests:BuildRequires:	libtool}
 BuildRequires:	libxslt-progs >= 1.1.15
-BuildRequires:	openjade
 BuildRequires:	perl-base >= 1:5.6.0
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	python >= 2.3
