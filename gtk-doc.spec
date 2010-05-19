@@ -114,7 +114,7 @@ install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %if %{with gnome}
 %find_lang %{name} --with-gnome --with-omf --all-name
 %else
-%{name}.lang
+touch %{name}.lang
 %endif
 
 %clean
