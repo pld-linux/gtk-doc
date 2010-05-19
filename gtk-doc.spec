@@ -111,7 +111,9 @@ install -d $RPM_BUILD_ROOT%{_gtkdocdir} \
 
 install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
+%if %{with gnome}
 %find_lang %{name} --with-gnome --with-omf --all-name
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
