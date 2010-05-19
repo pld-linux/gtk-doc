@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_with	tests	# build regression tests programs
+%bcond_without	gnome	# build without gnome-doc
 #
 %include	/usr/lib/rpm/macros.perl
 #
@@ -24,8 +25,8 @@ BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl >= 1.74.0
 BuildRequires:	gettext-devel
 %{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
-BuildRequires:	gnome-common >= 2.12.0-3
-BuildRequires:	gnome-doc-utils >= 0.3.2
+%{?with_gnome:BuildRequires:	gnome-common >= 2.12.0-3}
+%{?with_gnome:BuildRequires:	gnome-doc-utils >= 0.3.2}
 %{?with_tests:BuildRequires:	libtool}
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	perl-base >= 1:5.6.0
@@ -91,7 +92,7 @@ pomocą gtk-doc.
 mv -f doc/README doc/README.docs
 
 %build
-%{__gnome_doc_common}
+%{?with_gnome:%{__gnome_doc_common}}
 %{?with_tests:%{__libtoolize}}
 %{__aclocal} -I m4
 %{__autoconf}
