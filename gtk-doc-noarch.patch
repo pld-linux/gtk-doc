@@ -1,15 +1,18 @@
-diff -urN gtk-doc-1.14/configure.ac gtk-doc-1.14.new//configure.ac
---- gtk-doc-1.14/configure.ac	2010-01-03 13:11:00.000000000 +0100
-+++ gtk-doc-1.14.new//configure.ac	2010-03-29 16:31:44.160813374 +0200
-@@ -27,7 +27,6 @@
- 
- AC_ISC_POSIX
+diff -urN gtk-doc-1.18/configure.ac gtk-doc-1.18.new/configure.ac
+--- gtk-doc-1.18/configure.ac	2011-09-14 15:51:12.000000000 +0200
++++ gtk-doc-1.18.new/configure.ac	2011-09-21 21:01:47.021454469 +0200
+@@ -28,10 +28,6 @@
+ # Check for programs
  AC_PROG_CC
--AC_PROG_LIBTOOL
  
+-# Initialize libtool
+-LT_PREREQ([2.2])
+-LT_INIT
+-
  dnl Make sure we have pkg-config >= 0.19, so installing in $(datadir) is OK.
  PKG_PROG_PKG_CONFIG([0.19])
-@@ -185,23 +184,6 @@
+ 
+@@ -221,23 +217,6 @@
  gtkdoc-common.pl
  help/Makefile
  help/manual/Makefile
@@ -33,12 +36,12 @@ diff -urN gtk-doc-1.14/configure.ac gtk-doc-1.14.new//configure.ac
  ])
  
  dnl run chmod on these after parsing them.
-diff -urN gtk-doc-1.14/Makefile.am gtk-doc-1.14.new//Makefile.am
---- gtk-doc-1.14/Makefile.am	2009-12-18 09:17:37.000000000 +0100
-+++ gtk-doc-1.14.new//Makefile.am	2010-03-29 16:32:00.657469792 +0200
+diff -urN gtk-doc-1.18/Makefile.am gtk-doc-1.18.new/Makefile.am
+--- gtk-doc-1.18/Makefile.am	2011-06-17 10:39:37.000000000 +0200
++++ gtk-doc-1.18.new/Makefile.am	2011-09-21 21:01:51.870518213 +0200
 @@ -1,7 +1,7 @@
  ## Process this file with automake to produce Makefile.in
- ACLOCAL_AMFLAGS=-I m4
+ ACLOCAL_AMFLAGS=-I m4 ${ACLOCAL_FLAGS}
  
 -SUBDIRS = help tests
 +SUBDIRS = help
