@@ -1,7 +1,7 @@
 #
 # Conditional build:
 %bcond_with	tests	# build regression tests programs
-%bcond_without	gnome	# build without gnome-doc
+%bcond_without	gnome	# build without gtk-doc-manual in GNOME help format
 #
 %include	/usr/lib/rpm/macros.perl
 #
@@ -10,35 +10,31 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.20
+Version:	1.21
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.20/%{name}-%{version}.tar.xz
-# Source0-md5:	58532fed036f72fc3bfd4fe79473247b
+Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	e361de4750b707590d9ea1b5550fa738
 Patch0:		%{name}-noarch.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
-BuildRequires:	docbook-dtd412-xml >= 1.0-10
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl >= 1.74.0
-BuildRequires:	gettext-devel
 %{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
-%{?with_gnome:BuildRequires:	gnome-common >= 2.12.0-3}
-%{?with_gnome:BuildRequires:	gnome-doc-utils >= 0.3.2}
 %{?with_tests:BuildRequires:	libtool}
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	perl-base >= 1:5.6.0
 BuildRequires:	pkgconfig >= 1:0.19
-BuildRequires:	python >= 2.3
+BuildRequires:	python >= 1:2.3
 BuildRequires:	rpm-perlprov >= 4.1-13
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
-BuildRequires:	scrollkeeper >= 1:0.3.5
+BuildRequires:	rpmbuild(macros) >= 1.446
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
-Requires(post,postun):	scrollkeeper
+%{?with_gnome:BuildRequires:	yelp-tools}
 Requires:	%{name}-automake = %{version}-%{release}
 Requires:	docbook-dtd43-xml
 Requires:	docbook-style-dsssl >= 1.77
@@ -50,9 +46,6 @@ Requires:	source-highlight
 Conflicts:	pkgconfig < 1:0.19
 %{!?with_tests:BuildArch:	noarch}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-# architecture-independant pkgconfig dir
-%define		_pkgconfigdir	%{_datadir}/pkgconfig
 
 %description
 gtk-doc is a tool for generating API reference documentation. It is
@@ -94,7 +87,6 @@ pomocą gtk-doc.
 mv -f doc/README doc/README.docs
 
 %build
-%{?with_gnome:%{__gnome_doc_common}}
 %{?with_tests:%{__libtoolize}}
 %{__aclocal} -I m4
 %{__autoconf}
@@ -116,27 +108,19 @@ install -d $RPM_BUILD_ROOT%{_gtkdocdir} \
 install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %if %{with gnome}
-%find_lang %{name} --with-gnome --with-omf --all-name
-%else
-touch %{name}.lang
+%find_lang gtk-doc-manual --with-gnome
 %endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post
-%scrollkeeper_update_post
-
-%postun
-%scrollkeeper_update_postun
-
-%files -f %{name}.lang
+%files %{?with_gnome:-f gtk-doc-manual.lang}
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
 %attr(755,root,root) %{_bindir}/gtkdoc-*
 %attr(755,root,root) %{_bindir}/gtkdocize
 %{_datadir}/gtk-doc
-%{_pkgconfigdir}/%{name}.pc
+%{_npkgconfigdir}/gtk-doc.pc
 %{_datadir}/sgml/%{name}
 %{_examplesdir}/%{name}-%{version}
 
