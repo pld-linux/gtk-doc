@@ -1,7 +1,6 @@
-diff -urN gtk-doc-1.18/configure.ac gtk-doc-1.18.new/configure.ac
---- gtk-doc-1.18/configure.ac	2011-09-14 15:51:12.000000000 +0200
-+++ gtk-doc-1.18.new/configure.ac	2011-09-21 21:01:47.021454469 +0200
-@@ -28,10 +28,6 @@
+--- gtk-doc-1.22/configure.ac.noarch	2015-05-08 18:46:08.040460393 +0200
++++ gtk-doc-1.22/configure.ac	2015-05-08 18:46:35.954031830 +0200
+@@ -24,10 +24,6 @@ AM_SILENT_RULES([yes])
  # Check for programs
  AC_PROG_CC
  
@@ -12,7 +11,7 @@ diff -urN gtk-doc-1.18/configure.ac gtk-doc-1.18.new/configure.ac
  dnl Make sure we have pkg-config >= 0.19, so installing in $(datadir) is OK.
  PKG_PROG_PKG_CONFIG([0.19])
  
-@@ -221,23 +217,6 @@
+@@ -260,22 +256,6 @@ gtk-doc.cat
  gtkdoc-common.pl
  help/Makefile
  help/manual/Makefile
@@ -20,7 +19,6 @@ diff -urN gtk-doc-1.18/configure.ac gtk-doc-1.18.new/configure.ac
 -tests/gobject/Makefile
 -tests/gobject/src/Makefile
 -tests/gobject/docs/Makefile
--tests/gobject/docs-tmpl/Makefile
 -tests/bugs/Makefile
 -tests/bugs/src/Makefile
 -tests/bugs/docs/Makefile
@@ -36,9 +34,8 @@ diff -urN gtk-doc-1.18/configure.ac gtk-doc-1.18.new/configure.ac
  ])
  
  dnl run chmod on these after parsing them.
-diff -urN gtk-doc-1.18/Makefile.am gtk-doc-1.18.new/Makefile.am
---- gtk-doc-1.18/Makefile.am	2011-06-17 10:39:37.000000000 +0200
-+++ gtk-doc-1.18.new/Makefile.am	2011-09-21 21:01:51.870518213 +0200
+--- gtk-doc-1.22/Makefile.am.noarch	2015-05-08 18:46:15.247188483 +0200
++++ gtk-doc-1.22/Makefile.am	2015-05-08 18:46:44.464104524 +0200
 @@ -1,7 +1,7 @@
  ## Process this file with automake to produce Makefile.in
  ACLOCAL_AMFLAGS=-I m4 ${ACLOCAL_FLAGS}
