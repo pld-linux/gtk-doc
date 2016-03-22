@@ -10,12 +10,12 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.24
+Version:	1.25
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	a8b96bacaba04e83531abf8e36d4e476
+# Source0-md5:	0dc6570953112a464a409fb99258ccbc
 Patch0:		%{name}-noarch.patch
 URL:		http://www.gtk.org/rdp/
 BuildRequires:	autoconf >= 2.63
@@ -25,7 +25,7 @@ BuildRequires:	docbook-style-xsl >= 1.74.0
 %{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
 %{?with_tests:BuildRequires:	libtool}
 BuildRequires:	libxslt-progs >= 1.1.15
-BuildRequires:	perl-base >= 1:5.6.0
+BuildRequires:	perl-base >= 1:5.18.0
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	python >= 1:2.3
 BuildRequires:	rpm-perlprov >= 4.1-13
@@ -44,7 +44,6 @@ Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
 Requires:	source-highlight
 Conflicts:	pkgconfig < 1:0.19
-%{!?with_tests:BuildArch:	noarch}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -61,6 +60,9 @@ Summary(pl.UTF-8):	Makra automake'a do gtk-doc
 Group:		Development/Tools
 Requires:	automake
 Conflicts:	gtk-doc < 0:1.4-3
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description automake
 Automake macros for gtk-doc.
@@ -72,6 +74,9 @@ Makra automake'a do gtk-doc.
 Summary:	Common directories for documetation generated using gtk-doc
 Summary(pl.UTF-8):	Katalogi na dokumentację wygenerowaną za pomocą gtk-doc
 Group:		Development
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
 
 %description common
 Common directories for API documentation for various packages,
@@ -119,6 +124,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
 %attr(755,root,root) %{_bindir}/gtkdoc-*
 %attr(755,root,root) %{_bindir}/gtkdocize
+%dir %{_libdir}/cmake/GtkDoc
+%{_libdir}/cmake/GtkDoc/GtkDocConfig.cmake
+%{_libdir}/cmake/GtkDoc/GtkDocConfigVersion.cmake
+%{_libdir}/cmake/GtkDoc/GtkDocScanGObjWrapper.cmake
 %{_datadir}/gtk-doc
 %{_npkgconfigdir}/gtk-doc.pc
 %{_datadir}/sgml/%{name}
