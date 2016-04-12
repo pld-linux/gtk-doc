@@ -42,6 +42,7 @@ Requires:	docbook-style-xsl >= 1.74.0
 Requires:	docbook-utils >= 0.6.10
 Requires:	libxslt-progs >= 1.1.15
 Requires:	openjade
+Requires:	perl-base >= 1:5.18.0
 Requires:	source-highlight
 Conflicts:	pkgconfig < 1:0.19
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
