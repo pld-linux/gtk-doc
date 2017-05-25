@@ -11,12 +11,13 @@ Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.25
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
 # Source0-md5:	0dc6570953112a464a409fb99258ccbc
 Patch0:		%{name}-noarch.patch
+Patch1:		%{name}-gtk4.patch
 URL:		http://www.gtk.org/gtk-doc/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
@@ -90,7 +91,8 @@ pomocą gtk-doc.
 %prep
 %setup -q
 %{!?with_tests:%patch0 -p1}
-mv -f doc/README doc/README.docs
+%patch1 -p1
+%{__mv} doc/README doc/README.docs
 
 %build
 %{?with_tests:%{__libtoolize}}
