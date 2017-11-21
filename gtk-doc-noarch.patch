@@ -1,6 +1,6 @@
---- gtk-doc-1.22/configure.ac.noarch	2015-05-08 18:46:08.040460393 +0200
-+++ gtk-doc-1.22/configure.ac	2015-05-08 18:46:35.954031830 +0200
-@@ -24,10 +24,6 @@ AM_SILENT_RULES([yes])
+--- gtk-doc-1.26/configure.ac.orig	2017-08-11 10:01:46.000000000 +0200
++++ gtk-doc-1.26/configure.ac	2017-11-13 16:03:52.413461438 +0100
+@@ -24,10 +24,6 @@
  # Check for programs
  AC_PROG_CC
  
@@ -11,8 +11,8 @@
  dnl Make sure we have pkg-config >= 0.19, so installing in $(datadir) is OK.
  PKG_PROG_PKG_CONFIG([0.19])
  
-@@ -260,22 +256,6 @@ gtk-doc.cat
- gtkdoc-common.pl
+@@ -227,25 +223,6 @@
+ gtkdoc/config.py
  help/Makefile
  help/manual/Makefile
 -tests/Makefile
@@ -31,6 +31,9 @@
 -tests/empty/Makefile
 -tests/empty/src/Makefile
 -tests/empty/docs/Makefile
+-tests/program/Makefile
+-tests/program/src/Makefile
+-tests/program/docs/Makefile
  ])
  
  dnl run chmod on these after parsing them.
