@@ -20,7 +20,7 @@ URL:		http://www.gtk.org/gtk-doc/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd43-xml
-BuildRequires:	docbook-style-xsl >= 1.74.0
+BuildRequires:	docbook-style-xsl-ns >= 1.74.0
 %{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
 %{?with_tests:BuildRequires:	libtool >= 2:2.2}
 BuildRequires:	libxml2 >= 1:2.3.6
@@ -36,7 +36,7 @@ BuildRequires:	xz
 %{?with_gnome:BuildRequires:	yelp-tools}
 Requires:	%{name}-automake = %{version}-%{release}
 Requires:	docbook-dtd43-xml
-Requires:	docbook-style-xsl >= 1.74.0
+Requires:	docbook-style-xsl-ns >= 1.74.0
 Requires:	libxml2 >= 1:2.3.6
 Requires:	libxslt-progs >= 1.1.15
 Requires:	python-six
