@@ -9,18 +9,17 @@ Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.28
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
 # Source0-md5:	48550c33f9b9b530f9e5f397979b613a
 Patch0:		%{name}-noarch.patch
-Patch1:		xsl-ns.patch
 URL:		http://www.gtk.org/gtk-doc/
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd43-xml
-BuildRequires:	docbook-style-xsl-ns >= 1.74.0
+BuildRequires:	docbook-style-xsl-nons >= 1.74.0
 %{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
 %{?with_tests:BuildRequires:	libtool >= 2:2.2}
 BuildRequires:	libxml2 >= 1:2.3.6
@@ -36,7 +35,7 @@ BuildRequires:	xz
 %{?with_gnome:BuildRequires:	yelp-tools}
 Requires:	%{name}-automake = %{version}-%{release}
 Requires:	docbook-dtd43-xml
-Requires:	docbook-style-xsl-ns >= 1.74.0
+Requires:	docbook-style-xsl-nons >= 1.74.0
 Requires:	libxml2 >= 1:2.3.6
 Requires:	libxslt-progs >= 1.1.15
 Requires:	python-six
@@ -89,7 +88,6 @@ pomocą gtk-doc.
 %prep
 %setup -q
 %{!?with_tests:%patch0 -p1}
-%patch1 -p1
 %{__mv} doc/README doc/README.docs
 
 %build
