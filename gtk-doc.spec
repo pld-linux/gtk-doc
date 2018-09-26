@@ -8,12 +8,12 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.28
-Release:	2
+Version:	1.29
+Release:	1
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	48550c33f9b9b530f9e5f397979b613a
+# Source0-md5:	df26a38c209b3d7358f26268fcbdb9e3
 Patch0:		%{name}-noarch.patch
 URL:		http://www.gtk.org/gtk-doc/
 BuildRequires:	autoconf >= 2.63
@@ -25,8 +25,7 @@ BuildRequires:	docbook-style-xsl-nons >= 1.74.0
 BuildRequires:	libxml2 >= 1:2.3.6
 BuildRequires:	libxslt-progs >= 1.1.15
 BuildRequires:	pkgconfig >= 1:0.19
-BuildRequires:	python >= 1:2.7
-BuildRequires:	python-six
+BuildRequires:	python3 >= 1:3.2
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
 BuildRequires:	rpmbuild(macros) >= 1.446
@@ -38,7 +37,6 @@ Requires:	docbook-dtd43-xml
 Requires:	docbook-style-xsl-nons >= 1.74.0
 Requires:	libxml2 >= 1:2.3.6
 Requires:	libxslt-progs >= 1.1.15
-Requires:	python-six
 Requires:	source-highlight
 Conflicts:	pkgconfig < 1:0.19
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
