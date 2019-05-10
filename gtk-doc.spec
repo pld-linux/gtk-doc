@@ -8,12 +8,12 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.29
-Release:	2
+Version:	1.30
+Release:	1
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	df26a38c209b3d7358f26268fcbdb9e3
+# Source0-md5:	1045ba29ca0693ced2045523407aae4c
 Patch0:		%{name}-noarch.patch
 URL:		http://www.gtk.org/gtk-doc/
 BuildRequires:	autoconf >= 2.63
@@ -37,8 +37,10 @@ Requires:	docbook-dtd43-xml
 Requires:	docbook-style-xsl-nons >= 1.74.0
 Requires:	libxml2 >= 1:2.3.6
 Requires:	libxslt-progs >= 1.1.15
-Requires:	source-highlight
+Requires:	python3-pygments
+# +for mkhtml2: python3-anytree python3-lxml
 Conflicts:	pkgconfig < 1:0.19
+%{!?with_tests:BuildArch:	noarch}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -121,10 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog MAINTAINERS NEWS TODO README doc/*
 %attr(755,root,root) %{_bindir}/gtkdoc-*
 %attr(755,root,root) %{_bindir}/gtkdocize
-%dir %{_libdir}/cmake/GtkDoc
-%{_libdir}/cmake/GtkDoc/GtkDocConfig.cmake
-%{_libdir}/cmake/GtkDoc/GtkDocConfigVersion.cmake
-%{_libdir}/cmake/GtkDoc/GtkDocScanGObjWrapper.cmake
+%{_datadir}/cmake/GtkDoc
 %{_datadir}/gtk-doc
 %{_npkgconfigdir}/gtk-doc.pc
 %{_examplesdir}/%{name}-%{version}
