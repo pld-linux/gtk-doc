@@ -9,7 +9,7 @@ Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
 Version:	1.32
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
@@ -97,6 +97,7 @@ pomocą gtk-doc.
 %{__autoconf}
 %{__automake}
 %configure \
+	PKG_CONFIG=/usr/bin/pkg-config \
 	--disable-silent-rules
 
 %{__make}
