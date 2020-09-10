@@ -15,7 +15,7 @@ Group:		Development/Tools
 Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/%{version}/%{name}-%{version}.tar.xz
 # Source0-md5:	07764836262e154e94922e5f2aa476ae
 Patch0:		%{name}-noarch.patch
-URL:		http://www.gtk.org/gtk-doc/
+URL:		https://wiki.gnome.org/DocumentationProject/GtkDoc
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd43-xml
