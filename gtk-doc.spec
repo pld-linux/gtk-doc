@@ -8,12 +8,12 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.33.0
+Version:	1.33.1
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	http://ftp.gnome.org/pub/GNOME/sources/gtk-doc/1.33/%{name}-%{version}.tar.xz
-# Source0-md5:	4f2a7925c6b1cec4569ccb94e2b58d6b
+Source0:	https://download.gnome.org/sources/gtk-doc/1.33/%{name}-%{version}.tar.xz
+# Source0-md5:	13e4b98ab74eba8b15caaec86fbd96c4
 Patch0:		%{name}-noarch.patch
 URL:		https://wiki.gnome.org/DocumentationProject/GtkDoc
 BuildRequires:	autoconf >= 2.63
@@ -28,7 +28,7 @@ BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	python3 >= 1:3.2
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
-BuildRequires:	rpmbuild(macros) >= 1.446
+BuildRequires:	rpmbuild(macros) >= 1.752
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 %{?with_gnome:BuildRequires:	yelp-tools}
@@ -59,9 +59,7 @@ Requires:	automake
 Requires:	pkgconfig
 Conflicts:	glib2-devel < 1:2.10.0
 Conflicts:	gtk-doc < 0:1.4-3
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description automake
 Automake macros for gtk-doc.
@@ -73,9 +71,7 @@ Makra automake'a do gtk-doc.
 Summary:	Common directories for documetation generated using gtk-doc
 Summary(pl.UTF-8):	Katalogi na dokumentację wygenerowaną za pomocą gtk-doc
 Group:		Development
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
+%{?noarchpackage}
 
 %description common
 Common directories for API documentation for various packages,
