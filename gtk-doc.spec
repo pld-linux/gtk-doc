@@ -59,7 +59,7 @@ Requires:	automake
 Requires:	pkgconfig
 Conflicts:	glib2-devel < 1:2.10.0
 Conflicts:	gtk-doc < 0:1.4-3
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description automake
 Automake macros for gtk-doc.
@@ -71,7 +71,7 @@ Makra automake'a do gtk-doc.
 Summary:	Common directories for documetation generated using gtk-doc
 Summary(pl.UTF-8):	Katalogi na dokumentację wygenerowaną za pomocą gtk-doc
 Group:		Development
-%{?noarchpackage}
+BuildArch:	noarch
 
 %description common
 Common directories for API documentation for various packages,
