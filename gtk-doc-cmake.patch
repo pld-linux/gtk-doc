@@ -1,0 +1,10 @@
+--- gtk-doc-1.33.2/buildsystems/cmake/GtkDocScanGObjWrapper.cmake.orig	2021-01-19 18:08:26.489552300 +0100
++++ gtk-doc-1.33.2/buildsystems/cmake/GtkDocScanGObjWrapper.cmake	2021-04-17 18:03:56.254096313 +0200
+@@ -21,6 +21,7 @@
+ # This is needed for find_package(PkgConfig) to work correctly --
+ # CMAKE_MINIMUM_REQUIRED_VERSION needs to be defined.
+ cmake_minimum_required(VERSION 3.2)
++include(CMakeGenericSystem)
+ 
+ if(NOT APPLE)
+     # We use pkg-config to find glib et al
