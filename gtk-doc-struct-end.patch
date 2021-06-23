@@ -1,0 +1,13 @@
+Detect struct end (and don't crash) on indented "}".
+
+--- gtk-doc-1.33.2/gtkdoc/scan.py.orig	2021-06-21 17:26:04.628579149 +0200
++++ gtk-doc-1.33.2/gtkdoc/scan.py	2021-06-21 17:26:07.118565660 +0200
+@@ -941,7 +941,7 @@
+         # comments will cause problems.
+         if in_declaration == 'struct' or in_declaration == 'union':
+             # Same regex as for enum
+-            sm = re.search(r'\n\}\s*(?:(\w+)?%s)?;\s*$' % optional_decorators_regex, decl)
++            sm = re.search(r'\n\s*\}\s*(?:(\w+)?%s)?;\s*$' % optional_decorators_regex, decl)
+             if level <= 1 and sm:
+                 if symbol == '':
+                     symbol = sm.group(1)
