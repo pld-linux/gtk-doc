@@ -2,6 +2,17 @@ Detect struct end (and don't crash) on indented "}".
 
 --- gtk-doc-1.33.2/gtkdoc/scan.py.orig	2021-06-21 17:26:04.628579149 +0200
 +++ gtk-doc-1.33.2/gtkdoc/scan.py	2021-06-21 17:26:07.118565660 +0200
+@@ -839,6 +839,10 @@ def ScanHeaderContent(input_lines, decl_
+             logging.info('skipping, in decl %s, decl=[%s]', in_declaration, decl)
+             continue
+ 
++        if line.strip() == "":
++            # avoid matching ';' from previous line by ';\s*$'
++            continue
++
+         if in_declaration == "g-declare":
+             dm = re.search(r'\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*\).*$', decl)
+             # FIXME the original code does s// stuff here and we don't. Is it necessary?
 @@ -941,7 +941,7 @@
          # comments will cause problems.
          if in_declaration == 'struct' or in_declaration == 'union':
