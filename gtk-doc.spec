@@ -85,9 +85,9 @@ pomocą gtk-doc.
 
 %prep
 %setup -q
-%{!?with_tests:%patch0 -p1}
-%patch1 -p1
-%patch2 -p1
+%{!?with_tests:%patch -P0 -p1}
+%patch -P1 -p1
+%patch -P2 -p1
 
 %{__mv} doc/README doc/README.docs
 
