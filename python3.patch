@@ -1,0 +1,67 @@
+From 6fafd62a12a86b774c3a48c00ee2c7bda1459ce4 Mon Sep 17 00:00:00 2001
+From: Daniel Kahn Gillmor <dkg@fifthhorseman.net>
+Date: Sat, 14 Sep 2024 08:30:18 -0400
+Subject: [PATCH] Avoid SyntaxWarning with python 3.12 on raw regex strings.
+
+Without this change, we see the following warnings with python 3.12:
+
+scan.py:44: SyntaxWarning: invalid escape sequence '\s'
+  VAR_TYPE_MODIFIER = '(?:' + '|'.join([t + '\s+' for t in TYPE_MODIFIERS]) + ')*'
+scan.py:45: SyntaxWarning: invalid escape sequence '\s'
+  RET_TYPE_MODIFIER = '(?:' + '|'.join([t + '\s+' for t in TYPE_MODIFIERS + ['G_CONST_RETURN']]) + ')*'
+scan.py:238: SyntaxWarning: invalid escape sequence '\('
+  ignore_decorators = '|' + options.ignore_decorators.replace('()', '\(\w*\)')
+scan.py:239: SyntaxWarning: invalid escape sequence '\s'
+  optional_decorators_regex = '(?:\s+(?:%s))?' % ignore_decorators[1:]
+scan.py:487: SyntaxWarning: invalid escape sequence '\('
+  ignore_decorators = '|' + options.ignore_decorators.replace('()', '\(\w*\)')
+scan.py:488: SyntaxWarning: invalid escape sequence '\s'
+  optional_decorators_regex = '(?:\s+(?:%s))?' % ignore_decorators[1:]
+
+Given that these are not intended to be escape sequences in the python
+string formatter (they'll be used as character classes in the regex
+parser), marking them as raw strings solves the issue.
+---
+ gtkdoc/scan.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/gtkdoc/scan.py b/gtkdoc/scan.py
+index 6b18099c..4a660aa8 100644
+--- a/gtkdoc/scan.py
++++ b/gtkdoc/scan.py
+@@ -41,8 +41,8 @@ import shutil
+ from . import common
+ 
+ TYPE_MODIFIERS = ['const', 'signed', 'unsigned', 'long', 'short', 'struct', 'union', 'enum']
+-VAR_TYPE_MODIFIER = '(?:' + '|'.join([t + '\s+' for t in TYPE_MODIFIERS]) + ')*'
+-RET_TYPE_MODIFIER = '(?:' + '|'.join([t + '\s+' for t in TYPE_MODIFIERS + ['G_CONST_RETURN']]) + ')*'
++VAR_TYPE_MODIFIER = '(?:' + '|'.join([t + r'\s+' for t in TYPE_MODIFIERS]) + ')*'
++RET_TYPE_MODIFIER = '(?:' + '|'.join([t + r'\s+' for t in TYPE_MODIFIERS + ['G_CONST_RETURN']]) + ')*'
+ 
+ # Matchers for current line
+ CLINE_MATCHER = [
+@@ -235,8 +235,8 @@ def InitScanner(options):
+     ignore_decorators = ''
+     optional_decorators_regex = ''
+     if options.ignore_decorators:
+-        ignore_decorators = '|' + options.ignore_decorators.replace('()', '\(\w*\)')
+-        optional_decorators_regex = '(?:\s+(?:%s))?' % ignore_decorators[1:]
++        ignore_decorators = '|' + options.ignore_decorators.replace('()', r'\(\w*\)')
++        optional_decorators_regex = r'(?:\s+(?:%s))?' % ignore_decorators[1:]
+ 
+     # FUNCTION POINTER VARIABLES
+     CLINE_MATCHER[4] = re.compile(
+@@ -484,8 +484,8 @@ def ScanHeaderContent(input_lines, decl_list, get_types, options):
+     ignore_decorators = ''          # 1 uses
+     optional_decorators_regex = ''  # 4 uses
+     if options.ignore_decorators:
+-        ignore_decorators = '|' + options.ignore_decorators.replace('()', '\(\w*\)')
+-        optional_decorators_regex = '(?:\s+(?:%s))?' % ignore_decorators[1:]
++        ignore_decorators = '|' + options.ignore_decorators.replace('()', r'\(\w*\)')
++        optional_decorators_regex = r'(?:\s+(?:%s))?' % ignore_decorators[1:]
+ 
+     for line in input_lines:
+         # If this is a private header, skip it.
+-- 
+GitLab
+
