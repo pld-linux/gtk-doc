@@ -1,23 +1,22 @@
 #
 # Conditional build:
-%bcond_with	tests	# build regression tests programs
-%bcond_without	gnome	# build without gtk-doc-manual in GNOME help format
+%bcond_with	tests	# regression tests programs
+%bcond_without	gnome	# gtk-doc-manual in GNOME help format
 #
 Summary:	API documentation generation tool for GTK+ and GNOME
 Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.34.0
-Release:	2
+Version:	1.35.1
+Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	https://download.gnome.org/sources/gtk-doc/1.34/%{name}-%{version}.tar.xz
-# Source0-md5:	f0e7385ba25eddb6ce0953e8cf63d1bf
+Source0:	https://download.gnome.org/sources/gtk-doc/1.35/%{name}-%{version}.tar.xz
+# Source0-md5:	16817ad9e0bef63358b29b63f7738bbd
 Patch0:		%{name}-noarch.patch
 Patch1:		%{name}-cmake.patch
 Patch2:		%{name}-struct-end.patch
-Patch3:		python3.patch
 URL:		https://wiki.gnome.org/DocumentationProject/GtkDoc
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.11
@@ -89,7 +88,6 @@ pomocą gtk-doc.
 %{!?with_tests:%patch -P0 -p1}
 %patch -P1 -p1
 %patch -P2 -p1
-%patch -P3 -p1
 
 %{__mv} doc/README doc/README.docs
 
@@ -114,7 +112,7 @@ install -d $RPM_BUILD_ROOT%{_gtkdocdir} \
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -p examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %if %{with gnome}
 %find_lang gtk-doc-manual --with-gnome
@@ -125,7 +123,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?with_gnome:-f gtk-doc-manual.lang}
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS TODO README doc/*
+%doc AUTHORS ChangeLog NEWS README doc/*
 %attr(755,root,root) %{_bindir}/gtkdoc-*
 %attr(755,root,root) %{_bindir}/gtkdocize
 %{_datadir}/cmake/GtkDoc
