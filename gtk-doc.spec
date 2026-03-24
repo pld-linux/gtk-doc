@@ -8,29 +8,29 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.35.1
+Version:	1.36.0
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
-Source0:	https://download.gnome.org/sources/gtk-doc/1.35/%{name}-%{version}.tar.xz
-# Source0-md5:	16817ad9e0bef63358b29b63f7738bbd
+Source0:	https://download.gnome.org/sources/gtk-doc/1.36/%{name}-%{version}.tar.xz
+# Source0-md5:	69c1105d8c968cb5303a40bc88685eac
 Patch0:		%{name}-noarch.patch
-Patch1:		%{name}-cmake.patch
 Patch2:		%{name}-struct-end.patch
 URL:		https://wiki.gnome.org/DocumentationProject/GtkDoc
-BuildRequires:	autoconf >= 2.63
-BuildRequires:	automake >= 1:1.11
 BuildRequires:	docbook-dtd43-xml
 BuildRequires:	docbook-style-xsl-nons >= 1.74.0
-%{?with_tests:BuildRequires:	glib2-devel >= 1:2.6.0}
-%{?with_tests:BuildRequires:	libtool >= 2:2.2}
+%{?with_tests:BuildRequires:	glib2-devel >= 1:2.68}
 BuildRequires:	libxml2 >= 1:2.3.6
 BuildRequires:	libxslt-progs >= 1.1.15
+BuildRequires:	meson >= 0.64
+BuildRequires:	ninja >= 1.5
 BuildRequires:	pkgconfig >= 1:0.19
 BuildRequires:	python3 >= 1:3.2
+BuildRequires:	python3-pygments
+%{?with_tests:BuildRequires:	python3-parameterized}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(find_lang) >= 1.23
-BuildRequires:	rpmbuild(macros) >= 1.752
+BuildRequires:	rpmbuild(macros) >= 2.042
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 %{?with_gnome:BuildRequires:	yelp-tools}
@@ -42,7 +42,7 @@ Requires:	libxslt-progs >= 1.1.15
 Requires:	python3-pygments
 # +for mkhtml2: python3-anytree python3-lxml
 Conflicts:	pkgconfig < 1:0.19
-%{!?with_tests:BuildArch:	noarch}
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -61,7 +61,6 @@ Requires:	automake
 Requires:	pkgconfig
 Conflicts:	glib2-devel < 1:2.10.0
 Conflicts:	gtk-doc < 0:1.4-3
-BuildArch:	noarch
 
 %description automake
 Automake macros for gtk-doc.
@@ -72,8 +71,7 @@ Makra automake'a do gtk-doc.
 %package common
 Summary:	Common directories for documetation generated using gtk-doc
 Summary(pl.UTF-8):	Katalogi na dokumentację wygenerowaną za pomocą gtk-doc
-Group:		Development
-BuildArch:	noarch
+Group:		Documentation
 
 %description common
 Common directories for API documentation for various packages,
@@ -85,32 +83,24 @@ pomocą gtk-doc.
 
 %prep
 %setup -q
-%{!?with_tests:%patch -P0 -p1}
-%patch -P1 -p1
+%patch -P0 -p1
 %patch -P2 -p1
 
 %{__mv} doc/README doc/README.docs
 
 %build
-install -d build-aux
-%{?with_tests:%{__libtoolize}}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__automake}
-%configure \
-	PKG_CONFIG=/usr/bin/pkg-config \
-	PYTHON=%{__python3} \
-	--disable-silent-rules
+%meson \
+	%{!?with_tests:-Dtests=false} \
+	%{!?with_gnome:-Dyelp_manual=false}
 
-%{__make}
+%meson_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_gtkdocdir} \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+%meson_install
 
 cp -p examples/* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
@@ -123,7 +113,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files %{?with_gnome:-f gtk-doc-manual.lang}
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog NEWS README doc/*
+%doc NEWS README.md doc/*
 %attr(755,root,root) %{_bindir}/gtkdoc-*
 %attr(755,root,root) %{_bindir}/gtkdocize
 %{_datadir}/cmake/GtkDoc
