@@ -8,12 +8,12 @@ Summary(es.UTF-8):	El generador de documentación del GTK
 Summary(pl.UTF-8):	Narzędzie do generowania dokumentacji API do GTK+ i GNOME
 Summary(pt_BR.UTF-8):	O gerador de documentação do GTK
 Name:		gtk-doc
-Version:	1.36.0
+Version:	1.36.1
 Release:	1
 License:	GPL v2+
 Group:		Development/Tools
 Source0:	https://download.gnome.org/sources/gtk-doc/1.36/%{name}-%{version}.tar.xz
-# Source0-md5:	69c1105d8c968cb5303a40bc88685eac
+# Source0-md5:	819b11aa730cf5108f1df3f0eec91cf9
 Patch0:		%{name}-noarch.patch
 Patch2:		%{name}-struct-end.patch
 URL:		https://wiki.gnome.org/DocumentationProject/GtkDoc
